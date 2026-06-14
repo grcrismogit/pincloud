@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Explorar – PinCloud</title>
+  <link rel="stylesheet" href="/css/gallery.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    .explore-hero {
+      padding: 2.5rem 2rem 1rem;
+      text-align: center;
+    }
+    .explore-hero h1 { font-size: 2rem; font-weight: 900; margin-bottom: .5rem; }
+    .explore-hero p  { color: var(--muted); font-size: 1rem; }
+
+    .topic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      padding: 1.5rem 2rem 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .topic-card {
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      aspect-ratio: 4/3;
+      transition: transform .2s, box-shadow .2s;
+      text-decoration: none;
+      display: block;
+    }
+    .topic-card:hover { transform: scale(1.03); box-shadow: 0 8px 32px rgba(0,0,0,.18); }
+    .topic-card img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .topic-label {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,.7) 0%, transparent 100%);
+      color: #fff;
+      font-weight: 800;
+      font-size: 1rem;
+      padding: .75rem 1rem .65rem;
+    }
+
+    .trending-section {
+      padding: 0 2rem 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .trending-section h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: 1rem; }
+    .trending-tags { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; padding: 0; margin: 0; }
+    .tag {
+      background: var(--gray);
+      border-radius: 999px;
+      padding: .45rem 1rem;
+      font-size: .88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .tag:hover { background: #ddd; }
+  </style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <a href="/gallery" class="sb-logo" aria-label="PinCloud – Inicio">
+    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+  </a>
+  <a href="/gallery" class="sb-btn" title="Inicio">
+    <i class="fa-solid fa-house"></i><span class="tooltip">Inicio</span>
+  </a>
+  <a href="/explorar" class="sb-btn active" title="Explorar">
+    <i class="fa-solid fa-compass"></i><span class="tooltip">Explorar</span>
+  </a>
+  <a href="#" class="sb-btn" title="Ideas guardadas">
+    <i class="fa-solid fa-bookmark"></i><span class="tooltip">Ideas guardadas</span>
+  </a>
+  <button class="sb-btn" title="Crear pin" onclick="window.location.href='/gallery'">
+    <i class="fa-solid fa-plus"></i><span class="tooltip">Crear pin</span>
+  </button>
+  <div class="sb-spacer"></div>
+  <a href="#" class="sb-btn" title="Notificaciones"><i class="fa-regular fa-bell"></i><span class="tooltip">Notificaciones</span></a>
+  <a href="#" class="sb-btn" title="Mensajes"><i class="fa-regular fa-comment"></i><span class="tooltip">Mensajes</span></a>
+  <a href="#" class="sb-btn" title="Configuración"><i class="fa-solid fa-gear"></i><span class="tooltip">Configuración</span></a>
+</aside>
+
+<!-- ══ TOPBAR ══ -->
+<header class="topbar">
+  <div class="search-wrap">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" id="search-input" placeholder="Buscar temas, ideas, categorías..."/>
+  </div>
+  <div class="topbar-right">
+    <div class="avatar-wrap">
+      <button class="avatar-btn" id="avatar-btn">
+        <span id="avatar-initial">?</span>
+      </button>
+      <div class="dropdown hidden" id="dropdown">
+        <div class="dropdown-header">
+          <strong id="dd-name">Usuario</strong>
+          <small id="dd-email"></small>
+        </div>
+        <a href="#"><i class="fa-solid fa-user fa-fw"></i> Ver perfil</a>
+        <a href="#"><i class="fa-solid fa-bookmark fa-fw"></i> Ideas guardadas</a>
+        <a href="#"><i class="fa-solid fa-gear fa-fw"></i> Configuración</a>
+        <a href="#" id="btn-logout" class="danger"><i class="fa-solid fa-right-from-bracket fa-fw"></i> Cerrar sesión</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ══ CONTENT ══ -->
+<main class="gallery-wrap" style="padding-top: 1rem;">
+
+  <div class="explore-hero">
+    <h1>Explora ideas</h1>
+    <p>Descubre contenido por tema y encuentra inspiración para cada aspecto de tu vida</p>
+  </div>
+
+  <!-- TRENDING -->
+  <section class="trending-section" aria-labelledby="trending-title">
+    <h2 id="trending-title">
+      <i class="fa-solid fa-fire" style="color:var(--red)" aria-hidden="true"></i> Tendencias
+    </h2>
+    <ul class="trending-tags" role="list">
+      <li><a class="tag" href="/gallery?cat=decoracion">#decoracion</a></li>
+      <li><a class="tag" href="/gallery?cat=viajes">#viajesLatam</a></li>
+      <li><a class="tag" href="/gallery?cat=comida">#recetasFaciles</a></li>
+      <li><a class="tag" href="/gallery?cat=moda">#outfitDelDia</a></li>
+      <li><a class="tag" href="/gallery?cat=naturaleza">#naturalezaEcuador</a></li>
+      <li><a class="tag" href="/gallery?cat=fitness">#vidaSaludable</a></li>
+      <li><a class="tag" href="/gallery?cat=arte">#arteDigital</a></li>
+      <li><a class="tag" href="/gallery?cat=arquitectura">#diseñoModerno</a></li>
+      <li><a class="tag" href="/gallery?cat=tecnologia">#setupGamer</a></li>
+      <li><a class="tag" href="/gallery">#minimalism</a></li>
+    </ul>
+  </section>
+
+  <!-- TOPICS -->
+  <section class="trending-section" aria-labelledby="topics-title">
+    <h2 id="topics-title">Categorías populares</h2>
+    <div class="topic-grid">
+      <a class="topic-card" href="/gallery?cat=naturaleza" aria-label="Explorar naturaleza">
+        <img src="https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=400" alt="Paisaje natural con cascada"/>
+        <span class="topic-label">Naturaleza</span>
+      </a>
+      <a class="topic-card" href="/gallery?cat=viajes" aria-label="Explorar viajes">
+        <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400" alt="Ciudad de Tokyo de noche"/>
+        <span class="topic-label">Viajes</span>
+      </a>
+      <a class="topic-card" href="/gallery?cat=arte" aria-label="Explorar arte">
+        <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=400" alt="Pinturas de acuarela en proceso"/>
+        <span class="topic-label">Arte</span>
+      </a>
+      <a class="topic-card" href="/gallery?cat=comida" aria-label="Explorar comida">
+        <img src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=400" alt="Pasta artesanal con pesto"/>
+        <span class="topic-label">Comida</span>
+      </a>
+      <a class="topic-card" href="/gallery?cat=moda" aria-label="Explorar moda">
+        <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=400" alt="Outfit casual de temporada"/>
+        <span class="topic-label">Moda</span>
+      </a>
+      <a class="topic-card" href="/gallery?cat=arquitectura" aria-label="Explorar arquitectura">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400" alt="Arquitectura minimalista moderna"/>
+        <span class="topic-label">Arquitectura</span>
+      </a>
+      <a class="topic-card" href="/gallery?cat=tecnologia" aria-label="Explorar tecnología">
+        <img src="https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=400" alt="Setup de trabajo con computadora"/>
+        <span class="topic-label">Tecnología</span>
+      </a>
+      <a class="topic-card" href="/gallery?cat=decoracion" aria-label="Explorar decoración">
+        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400" alt="Sala decorada con estilo nórdico"/>
+        <span class="topic-label">Decoración</span>
+      </a>
+      <a class="topic-card" href="/gallery?cat=fitness" aria-label="Explorar fitness">
+        <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400" alt="Persona haciendo yoga al amanecer"/>
+        <span class="topic-label">Fitness</span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<script>
+const token = localStorage.getItem('token');
+const user  = JSON.parse(localStorage.getItem('user') || '{}');
+if (!token) window.location.href = '/';
+
+// Nav init
+const initial = (user.name || user.username || '?')[0].toUpperCase();
+document.getElementById('avatar-initial').textContent = initial;
+document.getElementById('dd-name').textContent  = user.name || user.username || '';
+document.getElementById('dd-email').textContent = user.email || '';
+
+// Dropdown
+const btn = document.getElementById('avatar-btn');
+const dd  = document.getElementById('dropdown');
+btn?.addEventListener('click', (e) => { e.stopPropagation(); dd.classList.toggle('hidden'); });
+document.addEventListener('click', () => dd?.classList.add('hidden'));
+
+document.getElementById('btn-logout')?.addEventListener('click', (e) => {
+  e.preventDefault(); localStorage.clear(); window.location.href = '/';
+});
+
+// Search
+document.getElementById('search-input')?.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && e.target.value.trim()) {
+    window.location.href = '/gallery';
+  }
+});
+
+function goTo(cat) {
+  window.location.href = '/gallery';
+  sessionStorage.setItem('filterCat', cat);
+}
+</script>
+</body>
+</html>

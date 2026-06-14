@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Información – PinCloud</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    :root { --red:#e60023; --red-dark:#ad081b; --text:#111; --muted:#767676; --gray:#f3f3f3; }
+    body { font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text); background: #fff; -webkit-font-smoothing: antialiased; min-height: 100dvh; }
+
+    /* NAVBAR */
+    .navbar { position: fixed; top:0; left:0; right:0; height:60px; background:#fff; border-bottom:1px solid #e8e8e8; z-index:100; display:flex; align-items:center; padding:0 2rem; gap:1rem; }
+    .nav-logo { display:flex; align-items:center; gap:.4rem; text-decoration:none; color:var(--red); font-weight:900; font-size:1.1rem; }
+    .nav-logo-icon { width:32px;height:32px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem;font-weight:900; }
+    .nav-link { font-weight:600;font-size:.9rem;padding:.5rem .85rem;border-radius:999px;text-decoration:none;color:var(--text);transition:background .15s; }
+    .nav-link:hover { background:var(--gray); }
+    .nav-link.active { font-weight:700;background:var(--gray); }
+    .nav-spacer { flex:1; }
+    .btn-nav { padding:.55rem 1.1rem; border-radius:999px; font-size:.9rem; font-weight:700; cursor:pointer; text-decoration:none; transition:background .15s; }
+    .btn-primary { background:var(--red); color:#fff; border:none; }
+    .btn-primary:hover { background:var(--red-dark); }
+    .btn-outline { background:#fff; color:var(--text); border:2px solid var(--text); }
+    .btn-outline:hover { background:var(--gray); }
+
+    /* HERO */
+    .hero { padding: 120px 2rem 80px; text-align:center; background:linear-gradient(135deg, #fff5f5 0%, #fff 50%, #f0f7ff 100%); }
+    .hero h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight:900; margin-bottom:1.2rem; letter-spacing:-0.035em; text-wrap:balance; line-height:1.08; }
+    .hero h1 span { color:var(--red); }
+    .hero p { font-size:1.15rem; color:var(--muted); max-width:580px; margin:0 auto 2rem; line-height:1.7; }
+    .hero-btns { display:flex; gap:.75rem; justify-content:center; flex-wrap:wrap; }
+    .btn-lg { padding:.85rem 2rem; font-size:1rem; font-weight:700; border-radius:999px; cursor:pointer; text-decoration:none; transition:background .15s; }
+    .btn-lg-red { background:var(--red); color:#fff; border:none; }
+    .btn-lg-red:hover { background:var(--red-dark); }
+    .btn-lg-out { background:#fff; color:var(--text); border:2px solid var(--text); }
+    .btn-lg-out:hover { background:var(--gray); }
+
+    /* STATS */
+    .stats { display:flex; justify-content:center; gap:3rem; padding:3rem 2rem; background:#fff; flex-wrap:wrap; border-top:1px solid #f0f0f0; border-bottom:1px solid #f0f0f0; }
+    .stat { text-align:center; }
+    .stat strong { display:block; font-size:2.2rem; font-weight:900; color:var(--red); }
+    .stat span { font-size:.95rem; color:var(--muted); }
+
+    /* SECTIONS */
+    .section { padding:5rem 2rem; max-width:1100px; margin:0 auto; }
+    .section-title { font-size:clamp(1.6rem, 3vw, 2.2rem); font-weight:800; margin-bottom:.75rem; letter-spacing:-0.025em; text-wrap:balance; }
+    .section-sub { color:var(--muted); font-size:1.05rem; margin-bottom:3rem; line-height:1.6; max-width:600px; }
+    .features { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:2rem; }
+    .feat-card { background:#fafafa; border-radius:20px; padding:2rem; transition:box-shadow .2s; }
+    .feat-card:hover { box-shadow:0 8px 32px rgba(0,0,0,.1); }
+    .feat-icon { width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:1rem; }
+    .feat-card h3 { font-size:1.1rem; font-weight:700; margin-bottom:.5rem; }
+    .feat-card p { color:var(--muted); font-size:.92rem; line-height:1.6; }
+
+    /* HOW IT WORKS */
+    .steps { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:2rem; counter-reset:step; }
+    .step { position:relative; padding:1.75rem; background:#fff; border:2px solid #f0f0f0; border-radius:20px; }
+    .step::before { counter-increment:step; content:counter(step); position:absolute; top:-16px; left:20px; width:32px;height:32px;background:var(--red);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem; }
+    .step h3 { font-size:1rem; font-weight:700; margin-bottom:.4rem; margin-top:.25rem; }
+    .step p { font-size:.88rem; color:var(--muted); line-height:1.55; }
+
+    /* CTA */
+    .cta { background:var(--red); color:#fff; padding:5rem 2rem; text-align:center; }
+    .cta h2 { font-size:clamp(1.8rem, 4vw, 2.8rem); font-weight:900; margin-bottom:1rem; }
+    .cta p { font-size:1.1rem; opacity:.9; margin-bottom:2rem; }
+    .btn-white { background:#fff; color:var(--red); border:none; padding:.85rem 2rem; font-size:1rem; font-weight:800; border-radius:999px; cursor:pointer; transition:opacity .15s; }
+    .btn-white:hover { opacity:.9; }
+
+    /* FOOTER */
+    footer { background:#111; color:#aaa; padding:2rem; text-align:center; font-size:.85rem; }
+    footer a { color:#aaa; text-decoration:none; } footer a:hover { color:#fff; }
+  </style>
+</head>
+<body>
+
+<header role="banner">
+<nav class="navbar" aria-label="Navegación principal">
+  <a href="/" class="nav-logo" aria-label="PinCloud - Inicio">
+    <span class="nav-logo-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></span>
+    <span>PinCloud</span>
+  </a>
+  <a href="/informacion" class="nav-link active" aria-current="page">Información</a>
+  <a href="/empresas" class="nav-link">Empresas</a>
+  <div class="nav-spacer"></div>
+  <a href="/" class="btn-nav btn-outline">Inicio</a>
+  <a href="/" class="btn-nav btn-primary" onclick="sessionStorage.setItem('openModal','login-modal')">Iniciar sesión</a>
+</nav>
+</header>
+
+<main id="main-content">
+<!-- HERO -->
+<section class="hero">
+  <h1>Todo sobre <span>PinCloud</span></h1>
+  <p>La plataforma de inspiración visual donde descubres, guardas y compartes las ideas que dan forma a tu vida.</p>
+  <div class="hero-btns">
+    <a href="/" class="btn-lg btn-lg-red" onclick="sessionStorage.setItem('openModal','register-modal')">Crear cuenta gratis</a>
+    <a href="/gallery" class="btn-lg btn-lg-out">Ver galería</a>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><strong>+10K</strong><span>Pins publicados</span></div>
+  <div class="stat"><strong>+2K</strong><span>Usuarios activos</span></div>
+  <div class="stat"><strong>10</strong><span>Categorías</span></div>
+  <div class="stat"><strong>100%</strong><span>Gratis para usuarios</span></div>
+</div>
+
+<!-- FEATURES -->
+<section class="section">
+  <h2 class="section-title">¿Qué puedes hacer en PinCloud?</h2>
+  <p class="section-sub">Explora millones de ideas visuales, organízalas y compártelas con la comunidad.</p>
+  <div class="features">
+    <article class="feat-card">
+      <div class="feat-icon" style="background:#fff0f3;color:#e60023;"><i class="fa-solid fa-images" aria-hidden="true"></i></div>
+      <h3>Descubre ideas</h3>
+      <p>Explora un feed visual infinito con contenido de todas las categorías: decoración, viajes, moda, comida y más.</p>
+    </article>
+    <article class="feat-card">
+      <div class="feat-icon" style="background:#f0f7ff;color:#0070f3;"><i class="fa-solid fa-bookmark" aria-hidden="true"></i></div>
+      <h3>Guarda tus favoritos</h3>
+      <p>Guarda los pins que más te gustan en tu colección personal y accede a ellos cuando quieras.</p>
+    </article>
+    <article class="feat-card">
+      <div class="feat-icon" style="background:#f0fff4;color:#00a550;"><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i></div>
+      <h3>Publica tus ideas</h3>
+      <p>Sube imágenes directamente desde tu dispositivo. Las almacenamos de forma segura en la nube con AWS S3.</p>
+    </article>
+    <article class="feat-card">
+      <div class="feat-icon" style="background:#fffbf0;color:#f5a623;"><i class="fa-regular fa-heart" aria-hidden="true"></i></div>
+      <h3>Interactúa</h3>
+      <p>Dale "me gusta" a las publicaciones y deja comentarios para conectar con otros usuarios de la comunidad.</p>
+    </article>
+    <article class="feat-card">
+      <div class="feat-icon" style="background:#f5f0ff;color:#7c3aed;"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></div>
+      <h3>Busca por categoría</h3>
+      <p>Filtra el contenido por tema para encontrar exactamente lo que buscas: naturaleza, arquitectura, arte, fitness...</p>
+    </article>
+    <article class="feat-card">
+      <div class="feat-icon" style="background:#fff5f0;color:#f97316;"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></div>
+      <h3>Seguro y confiable</h3>
+      <p>Tu cuenta está protegida con verificación de email, JWT y almacenamiento seguro en AWS.</p>
+    </article>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" style="background:#fafafa;max-width:100%;padding:4rem 2rem;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <h2 class="section-title">Cómo funciona</h2>
+    <p class="section-sub">En tres pasos estás listo para inspirarte.</p>
+    <div class="steps">
+      <div class="step">
+        <h3>Crea tu cuenta</h3>
+        <p>Regístrate con tu email. Recibirás un código de verificación para activar tu cuenta de forma segura.</p>
+      </div>
+      <div class="step">
+        <h3>Explora el feed</h3>
+        <p>Navega por el feed de inspiración. Filtra por categorías o usa el buscador para encontrar ideas específicas.</p>
+      </div>
+      <div class="step">
+        <h3>Guarda y comparte</h3>
+        <p>Guarda los pins que te inspiran, dale likes, comenta y sube tus propias imágenes para compartir con la comunidad.</p>
+      </div>
+      <div class="step">
+        <h3>Haz crecer tu colección</h3>
+        <p>Tu perfil acumula todos tus pins guardados. Vuelve cuando quieras para ver tu colección de ideas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section class="section">
+  <h2 class="section-title">Tecnología detrás de PinCloud</h2>
+  <p class="section-sub">Construido con las mejores herramientas del mercado para garantizar rapidez, seguridad y escalabilidad.</p>
+  <div class="features">
+    <article class="feat-card">
+      <div class="feat-icon" style="background:#f0fff4;color:#339933;"><i class="fa-brands fa-node-js" aria-hidden="true"></i></div>
+      <h3>Node.js + Express</h3>
+      <p>Backend rápido y eficiente que maneja todas las peticiones de la API REST.</p>
+    </article>
+    <article class="feat-card">
+      <div class="feat-icon" style="background:#f0fff4;color:#00a550;"><i class="fa-solid fa-database" aria-hidden="true"></i></div>
+      <h3>MongoDB</h3>
+      <p>Base de datos NoSQL que almacena usuarios, pins, likes y comentarios con total flexibilidad.</p>
+    </article>
+    <article class="feat-card">
+      <div class="feat-icon" style="background:#fff8e1;color:#ff9900;"><i class="fa-brands fa-aws" aria-hidden="true"></i></div>
+      <h3>AWS S3 + SES</h3>
+      <p>Las imágenes se almacenan en Amazon S3. Los emails de verificación se envían con Amazon SES.</p>
+    </article>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2>¿Listo para empezar?</h2>
+  <p>Únete a PinCloud hoy y descubre un mundo de inspiración visual.</p>
+  <button class="btn-white" onclick="window.location.href='/'">Crear cuenta gratis</button>
+</section>
+
+</main>
+
+<footer>
+  <p>© 2026 PinCloud &nbsp;·&nbsp; <a href="/informacion">Información</a> &nbsp;·&nbsp; <a href="/empresas">Empresas</a> &nbsp;·&nbsp; <a href="/">Inicio</a></p>
+</footer>
+
+</body>
+</html>

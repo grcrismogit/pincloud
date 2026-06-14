@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PinCloud – Crear cuenta</title>
+  <link rel="stylesheet" href="../public/css/auth.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body { background: #fff; }
+    .auth-card { box-shadow: none; border: 1px solid #e0e0e0; }
+    .logo-wrap { display:flex; justify-content:center; margin-bottom:1.25rem; }
+    .logo-circle {
+      width:48px; height:48px; background:var(--red); border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      color:#fff; font-size:1.6rem; font-weight:900;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="logo-wrap"><div class="logo-circle">P</div></div>
+
+      <h2 style="margin-bottom:0.25rem;">Crear una cuenta</h2>
+      <p class="subtitle">Descubre recetas, estilos, ideas y mucho más.</p>
+
+      <div id="alert-box" class="alert hidden"></div>
+
+      <form id="register-form" novalidate>
+        <div class="input-group">
+          <input type="email" id="email" placeholder="Correo electrónico" required autocomplete="email"/>
+        </div>
+        <div class="input-group">
+          <input type="password" id="password" placeholder="Crea una contraseña" required autocomplete="new-password"/>
+          <button type="button" class="toggle-pwd" onclick="togglePassword('password')">
+            <i class="fa-solid fa-eye" id="eye-password"></i>
+          </button>
+        </div>
+        <div class="password-strength" id="pwd-strength">
+          <div class="strength-bar"><span id="strength-fill"></span></div>
+          <small id="strength-text"></small>
+        </div>
+
+        <div class="input-row">
+          <div class="input-group">
+            <input type="text" id="name" placeholder="Nombre" required/>
+          </div>
+          <div class="input-group">
+            <input type="text" id="username" placeholder="Usuario" required/>
+          </div>
+        </div>
+
+        <div style="font-size:0.78rem;color:#767676;text-align:left;margin-bottom:1rem;line-height:1.5;">
+          Al continuar, aceptas la <a href="#" style="color:#111;font-weight:700;">Política de privacidad</a>
+          y los <a href="#" style="color:#111;font-weight:700;">Términos del servicio</a> de PinCloud.
+        </div>
+
+        <button type="submit" class="btn-primary" id="btn-register">
+          <span class="btn-text">Continuar</span>
+          <span class="btn-spinner hidden"><i class="fa-solid fa-spinner fa-spin"></i></span>
+        </button>
+      </form>
+
+      <p class="auth-footer" style="margin-top:1.25rem;border-top:1px solid #e0e0e0;padding-top:1.25rem;font-size:0.9rem;">
+        ¿Ya eres miembro? <a href="login.html">Inicia sesión</a>
+      </p>
+    </div>
+  </div>
+
+  <script src="../public/js/auth.js"></script>
+  <script>
+    document.getElementById('password').addEventListener('input', function() {
+      const score = getPasswordStrength(this.value);
+      const fill  = document.getElementById('strength-fill');
+      const text  = document.getElementById('strength-text');
+      const colors = ['','#e60023','#e67e22','#f1c40f','#2ecc71','#27ae60'];
+      const labels = ['','Muy débil','Débil','Regular','Fuerte','Muy fuerte'];
+      fill.style.width      = (score * 20) + '%';
+      fill.style.background = colors[score];
+      text.textContent      = this.value ? labels[score] : '';
+      text.style.color      = colors[score];
+    });
+
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email    = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const name     = document.getElementById('name').value.trim();
+      const username = document.getElementById('username').value.trim();
+      if (!email || !password || !name || !username) return showAlert('Completa todos los campos.', 'error');
+      if (password.length < 8) return showAlert('La contraseña debe tener al menos 8 caracteres.', 'error');
+      setLoading('btn-register', true);
+      try {
+        const res  = await fetch('/api/auth/register', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ name, username, email, password })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showAlert('¡Cuenta creada! Revisa tu correo.', 'success');
+          setTimeout(() => window.location.href = 'verify-email.html?email=' + encodeURIComponent(email), 2000);
+        } else { showAlert(data.message || 'Error al registrarse.', 'error'); }
+      } catch { showAlert('Error de conexión.', 'error'); }
+      finally  { setLoading('btn-register', false); }
+    });
+  </script>
+</body>
+</html>

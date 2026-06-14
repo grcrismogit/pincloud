@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Tu galería de PinCloud – Explora, crea y guarda tus ideas favoritas."/>
+  <title>PinCloud – Galería</title>
+  <link rel="stylesheet" href="/css/gallery.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar" aria-label="Navegación lateral">
+  <a href="/gallery" class="sb-logo" aria-label="PinCloud – Inicio">
+    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+  </a>
+  <nav aria-label="Menú principal">
+    <a href="/gallery" class="sb-btn active" aria-label="Inicio" aria-current="page">
+      <i class="fa-solid fa-house" aria-hidden="true"></i>
+      <span class="tooltip">Inicio</span>
+    </a>
+    <a href="/explorar" class="sb-btn" aria-label="Explorar">
+      <i class="fa-solid fa-compass" aria-hidden="true"></i>
+      <span class="tooltip">Explorar</span>
+    </a>
+    <a href="#" class="sb-btn" aria-label="Ideas guardadas" id="sb-saved">
+      <i class="fa-solid fa-bookmark" aria-hidden="true"></i>
+      <span class="tooltip">Ideas guardadas</span>
+    </a>
+    <button class="sb-btn" aria-label="Crear pin" id="sb-create" onclick="openUpload()">
+      <i class="fa-solid fa-plus" aria-hidden="true"></i>
+      <span class="tooltip">Crear pin</span>
+    </button>
+    <div class="sb-spacer"></div>
+    <a href="#" class="sb-btn" aria-label="Notificaciones">
+      <i class="fa-regular fa-bell" aria-hidden="true"></i>
+      <span class="tooltip">Notificaciones</span>
+    </a>
+    <a href="#" class="sb-btn" aria-label="Mensajes">
+      <i class="fa-regular fa-comment" aria-hidden="true"></i>
+      <span class="tooltip">Mensajes</span>
+    </a>
+    <a href="#" class="sb-btn" aria-label="Configuración">
+      <i class="fa-solid fa-gear" aria-hidden="true"></i>
+      <span class="tooltip">Configuración</span>
+    </a>
+  </nav>
+</aside>
+
+<!-- ══ TOPBAR ══ -->
+<header class="topbar" role="banner">
+  <search class="search-wrap">
+    <label for="search-input" class="sr-only">Buscar pins</label>
+    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+    <input type="search" id="search-input" placeholder="Buscar" aria-label="Buscar pins"/>
+  </search>
+  <div class="topbar-right">
+    <a href="#" class="top-icon-btn" aria-label="Ajustes de visualización">
+      <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+    </a>
+    <div class="avatar-wrap">
+      <button class="avatar-btn" id="avatar-btn" aria-label="Menú de usuario" aria-haspopup="true" aria-expanded="false">
+        <span id="avatar-initial" aria-hidden="true">?</span>
+      </button>
+      <div class="dropdown hidden" id="dropdown" role="menu" aria-hidden="true">
+        <div class="dropdown-header">
+          <strong id="dd-name">Usuario</strong>
+          <small id="dd-email"></small>
+        </div>
+        <a href="#" role="menuitem"><i class="fa-solid fa-user fa-fw" aria-hidden="true"></i> Ver perfil</a>
+        <a href="#" role="menuitem"><i class="fa-solid fa-bookmark fa-fw" aria-hidden="true"></i> Ideas guardadas</a>
+        <a href="#" role="menuitem"><i class="fa-solid fa-gear fa-fw" aria-hidden="true"></i> Configuración</a>
+        <a href="#" id="btn-logout" class="danger" role="menuitem"><i class="fa-solid fa-right-from-bracket fa-fw" aria-hidden="true"></i> Cerrar sesión</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ══ CATEGORIES ══ -->
+<nav class="cat-bar" aria-label="Filtrar por categoría">
+  <button class="cat-btn active" data-cat="all">Todo</button>
+  <button class="cat-btn" data-cat="naturaleza">Naturaleza</button>
+  <button class="cat-btn" data-cat="arquitectura">Arquitectura</button>
+  <button class="cat-btn" data-cat="arte">Arte</button>
+  <button class="cat-btn" data-cat="tecnologia">Tecnología</button>
+  <button class="cat-btn" data-cat="viajes">Viajes</button>
+  <button class="cat-btn" data-cat="comida">Comida</button>
+  <button class="cat-btn" data-cat="moda">Moda</button>
+  <button class="cat-btn" data-cat="decoracion">Decoración</button>
+  <button class="cat-btn" data-cat="fitness">Fitness</button>
+</nav>
+
+<!-- ══ GALLERY ══ -->
+<main class="gallery-wrap" id="main-content">
+  <div class="masonry-grid" id="grid" role="list" aria-label="Galería de pins"></div>
+  <div id="spinner" class="loading-spinner" role="status" aria-live="polite">
+    <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+    <span class="sr-only">Cargando pins...</span>
+  </div>
+  <div id="empty" class="empty-state hidden" role="status">
+    <i class="fa-solid fa-images" aria-hidden="true"></i>
+    <h3>Aún no hay pins aquí</h3>
+    <p>Sé el primero en publicar o prueba otra categoría.</p>
+  </div>
+</main>
+
+<!-- ══ UPLOAD MODAL ══ -->
+<div class="modal-overlay hidden" id="upload-modal" role="dialog" aria-modal="true" aria-labelledby="upload-modal-title">
+  <article class="modal">
+    <header class="modal-hd">
+      <h2 id="upload-modal-title">Crear pin</h2>
+      <button class="modal-close" onclick="closeUpload()" aria-label="Cerrar modal">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </header>
+    <div class="modal-body">
+      <div class="drop-zone" id="drop-zone" role="button" tabindex="0" aria-label="Zona para subir imagen">
+        <i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>
+        <p>Arrastra y suelta aquí o</p>
+        <label for="file-input" class="btn-choose">Elige un archivo</label>
+        <input type="file" id="file-input" accept="image/*" hidden aria-label="Seleccionar imagen"/>
+        <small>PNG, JPG, GIF, WEBP — máx. 32 MB</small>
+      </div>
+      <div id="preview-container" class="hidden">
+        <img id="image-preview" src="" alt="Vista previa de la imagen seleccionada"/>
+        <button class="btn-rm-preview" id="btn-rm" aria-label="Eliminar imagen seleccionada">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </div>
+      <section class="upload-fields" aria-label="Datos del pin">
+        <label for="up-title" class="sr-only">Título del pin</label>
+        <input type="text" id="up-title" placeholder="Añade un título" maxlength="80" aria-required="true"/>
+        <label for="up-desc" class="sr-only">Descripción del pin</label>
+        <textarea id="up-desc" placeholder="Describe este pin" rows="2" maxlength="200"></textarea>
+        <label for="up-cat" class="sr-only">Categoría</label>
+        <select id="up-cat" aria-required="true">
+          <option value="">Selecciona una categoría</option>
+          <option value="naturaleza">Naturaleza</option>
+          <option value="arquitectura">Arquitectura</option>
+          <option value="arte">Arte</option>
+          <option value="tecnologia">Tecnología</option>
+          <option value="viajes">Viajes</option>
+          <option value="comida">Comida</option>
+          <option value="moda">Moda</option>
+          <option value="decoracion">Decoración</option>
+          <option value="fitness">Fitness</option>
+        </select>
+      </section>
+      <div id="up-alert" class="alert-sm hidden" role="alert" aria-live="assertive"></div>
+      <div id="up-progress" class="progress-wrap hidden" aria-live="polite">
+        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+          <span id="prog-fill"></span>
+        </div>
+        <small id="prog-text">Subiendo...</small>
+      </div>
+    </div>
+    <footer class="modal-foot">
+      <button class="btn-outline" onclick="closeUpload()">Cancelar</button>
+      <button class="btn-red" id="btn-up-submit" aria-busy="false">
+        <span class="btn-text">Publicar</span>
+        <span class="spin hidden" aria-hidden="true"><i class="fa-solid fa-spinner fa-spin"></i></span>
+      </button>
+    </footer>
+  </article>
+</div>
+
+<!-- ══ DETAIL MODAL ══ -->
+<div class="modal-overlay hidden" id="detail-modal" role="dialog" aria-modal="true" aria-labelledby="d-title">
+  <article class="modal modal-detail">
+    <button class="modal-close detail-close" id="detail-close" aria-label="Cerrar detalle">
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+    </button>
+    <div class="detail-grid">
+      <figure class="detail-img-side">
+        <img id="d-img" src="" alt=""/>
+      </figure>
+      <section class="detail-info-side" aria-label="Información del pin">
+        <div class="detail-top-actions">
+          <button class="btn-save-detail" id="d-save" aria-label="Guardar pin">
+            <i class="fa-solid fa-bookmark" aria-hidden="true"></i> Guardar
+          </button>
+          <button class="btn-circ btn-like-detail" id="d-like" aria-label="Me gusta">
+            <i class="fa-regular fa-heart" aria-hidden="true"></i>
+          </button>
+          <button class="btn-circ" aria-label="Compartir pin">
+            <i class="fa-solid fa-arrow-up-from-bracket" aria-hidden="true"></i>
+          </button>
+          <button class="btn-circ" aria-label="Más opciones">
+            <i class="fa-solid fa-ellipsis" aria-hidden="true"></i>
+          </button>
+        </div>
+        <p class="detail-likes">
+          <i class="fa-solid fa-heart" style="color:var(--red)" aria-hidden="true"></i>
+          <span id="d-likes-count">0</span> me gusta
+        </p>
+        <h2 class="detail-title" id="d-title"></h2>
+        <p class="detail-desc" id="d-desc"></p>
+        <address class="detail-author">
+          <div class="comment-avatar" id="d-avatar-wrap" aria-hidden="true">
+            <span id="d-avatar-initial"></span>
+          </div>
+          <div>
+            <strong id="d-username"></strong>
+            <time id="d-date"></time>
+          </div>
+        </address>
+        <!-- Comments -->
+        <section class="comments-section" aria-label="Comentarios">
+          <h3>Comentarios</h3>
+          <ul class="comment-list" id="comment-list" aria-live="polite">
+            <li class="no-comments">Sé el primero en comentar.</li>
+          </ul>
+          <div class="comment-input-row">
+            <label for="comment-input" class="sr-only">Escribe un comentario</label>
+            <input type="text" class="comment-input" id="comment-input" placeholder="Añade un comentario..." maxlength="500"/>
+            <button class="btn-send" id="btn-send-comment" aria-label="Enviar comentario">
+              <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+            </button>
+          </div>
+        </section>
+      </section>
+    </div>
+  </article>
+</div>
+
+<script src="/js/gallery.js"></script>
+</body>
+</html>

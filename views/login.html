@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PinCloud</title>
+  <link rel="stylesheet" href="../public/css/auth.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body { background: #fff; }
+    .auth-container { max-width: 380px; }
+    .auth-card { box-shadow: none; border: 1px solid #e0e0e0; padding: 2.5rem 2.5rem 2rem; }
+    .logo-wrap {
+      display: flex; justify-content: center; margin-bottom: 1.5rem;
+    }
+    .logo-circle {
+      width: 48px; height: 48px; background: var(--red); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1.6rem; font-weight: 900;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="logo-wrap">
+        <div class="logo-circle">P</div>
+      </div>
+
+      <h2 style="margin-bottom:1.5rem;">Bienvenido a PinCloud</h2>
+
+      <div id="alert-box" class="alert hidden"></div>
+
+      <form id="login-form" novalidate>
+        <div class="input-group">
+          <input type="email" id="email" placeholder="Correo electrónico" required autocomplete="email"/>
+        </div>
+        <div class="input-group">
+          <input type="password" id="password" placeholder="Contraseña" required autocomplete="current-password"/>
+          <button type="button" class="toggle-pwd" onclick="togglePassword('password')">
+            <i class="fa-solid fa-eye" id="eye-password"></i>
+          </button>
+        </div>
+
+        <button type="submit" class="btn-primary" id="btn-login" style="margin-top:0.5rem;">
+          <span class="btn-text">Iniciar sesión</span>
+          <span class="btn-spinner hidden"><i class="fa-solid fa-spinner fa-spin"></i></span>
+        </button>
+      </form>
+
+      <a href="forgot-password.html" class="link-small" style="text-align:center;margin-top:0.75rem;display:block;color:#111;font-weight:600;">
+        ¿Olvidaste tu contraseña?
+      </a>
+
+      <div class="divider"><span>O</span></div>
+
+      <p class="auth-footer" style="border:none;padding:0;margin-top:0;font-size:0.9rem;">
+        ¿Eres nuevo? <a href="register.html">Regístrate</a>
+      </p>
+    </div>
+  </div>
+
+  <script src="../public/js/auth.js"></script>
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email    = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      if (!email || !password) return showAlert('Completa todos los campos.', 'error');
+      setLoading('btn-login', true);
+      try {
+        const res  = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+          window.location.href = 'gallery.html';
+        } else {
+          showAlert(data.message || 'Credenciales incorrectas.', 'error');
+        }
+      } catch { showAlert('Error de conexión.', 'error'); }
+      finally  { setLoading('btn-login', false); }
+    });
+  </script>
+</body>
+</html>

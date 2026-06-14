@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PinCloud – Verifica tu correo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --red: #e60023; --red-dark: #ad081b; --text: #111; --muted: #767676; --border: #cdcdcd; --gray: #efefef; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--gray);
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 1rem;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 2.5rem 2.5rem 2rem;
+      width: 100%; max-width: 400px;
+      text-align: center;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.12);
+    }
+
+    .logo {
+      width: 56px; height: 56px; background: var(--red);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.5rem; color: #fff; font-size: 1.4rem;
+    }
+
+    h1 { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .subtitle { font-size: 0.92rem; color: var(--muted); line-height: 1.6; margin-bottom: 1.75rem; }
+    .subtitle strong { color: var(--text); }
+
+    /* OTP */
+    .otp-row { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .otp-box {
+      width: 52px; height: 60px;
+      text-align: center; font-size: 1.6rem; font-weight: 800;
+      border: 2px solid var(--border); border-radius: 12px;
+      outline: none; color: var(--text);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .otp-box:focus  { border-color: var(--text); box-shadow: 0 0 0 3px rgba(0,0,0,0.06); }
+    .otp-box.filled { border-color: var(--red); color: var(--red); }
+
+    /* Alert */
+    .alert {
+      padding: 0.7rem 0.9rem; border-radius: 10px;
+      font-size: 0.875rem; font-weight: 500;
+      display: flex; align-items: center; gap: 0.4rem;
+      margin-bottom: 1rem; text-align: left;
+    }
+    .alert.error   { background: #fff0f1; color: var(--red-dark); border: 1px solid #ffbdc3; }
+    .alert.success { background: #ebf9f1; color: #00875a; border: 1px solid #b3e6cf; }
+    .hidden { display: none !important; }
+
+    /* Button */
+    .btn-primary {
+      width: 100%; padding: 0.9rem; border-radius: 999px; border: none;
+      background: var(--red); color: #fff; font-size: 1rem; font-weight: 700;
+      cursor: pointer; transition: background 0.15s, transform 0.1s;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .btn-primary:hover  { background: var(--red-dark); }
+    .btn-primary:active { transform: scale(0.97); }
+    .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    /* Resend */
+    .resend-area { font-size: 0.87rem; color: var(--muted); }
+    .resend-btn {
+      background: none; border: none; color: var(--text);
+      font-weight: 700; cursor: pointer; font-size: inherit;
+      text-decoration: underline;
+    }
+    .resend-btn:disabled { color: var(--muted); cursor: default; text-decoration: none; }
+    .resend-btn:hover:not(:disabled) { color: var(--red); }
+    .countdown { font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; }
+
+    /* Success state */
+    .success-state { display: none; padding: 1rem 0; }
+    .success-state.show { display: block; }
+    .success-icon { font-size: 3.5rem; color: #00875a; margin-bottom: 1rem; }
+
+    /* Back link */
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      margin-top: 1.5rem; font-size: 0.87rem; color: var(--muted);
+      text-decoration: none; transition: color 0.15s;
+    }
+    .back-link:hover { color: var(--text); }
+  </style>
+</head>
+<body>
+<div class="card">
+
+  <!-- Verificación -->
+  <div id="verify-view">
+    <div class="logo"><i class="fa-solid fa-envelope-open-text"></i></div>
+    <h1>Revisa tu correo</h1>
+    <p class="subtitle">
+      Enviamos un código de 6 dígitos a<br/>
+      <strong id="email-display">tu correo electrónico</strong>
+    </p>
+
+    <div id="alert-box" class="alert hidden"></div>
+
+    <div class="otp-row" id="otp-row">
+      <input type="text" class="otp-box" maxlength="1" inputmode="numeric"/>
+      <input type="text" class="otp-box" maxlength="1" inputmode="numeric"/>
+      <input type="text" class="otp-box" maxlength="1" inputmode="numeric"/>
+      <input type="text" class="otp-box" maxlength="1" inputmode="numeric"/>
+      <input type="text" class="otp-box" maxlength="1" inputmode="numeric"/>
+      <input type="text" class="otp-box" maxlength="1" inputmode="numeric"/>
+    </div>
+
+    <button class="btn-primary" id="btn-verify" onclick="verifyCode()">
+      <span id="btn-text">Verificar cuenta</span>
+      <span id="btn-spin" class="hidden"><i class="fa-solid fa-spinner fa-spin"></i></span>
+    </button>
+
+    <div class="resend-area">
+      ¿No recibiste el código?
+      <button class="resend-btn" id="resend-btn" onclick="resendCode()">Reenviar correo</button>
+      <div class="countdown hidden" id="countdown"></div>
+    </div>
+  </div>
+
+  <!-- Éxito -->
+  <div class="success-state" id="success-view">
+    <div class="success-icon"><i class="fa-solid fa-circle-check"></i></div>
+    <h1 style="margin-bottom:0.5rem;">¡Cuenta verificada!</h1>
+    <p class="subtitle">Tu cuenta fue activada exitosamente. Ya puedes iniciar sesión.</p>
+    <button class="btn-primary" onclick="window.location.href='/'">Ir a iniciar sesión</button>
+  </div>
+
+  <a href="/" class="back-link"><i class="fa-solid fa-arrow-left"></i> Volver al inicio</a>
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const email  = params.get('email') || '';
+  if (email) document.getElementById('email-display').textContent = email;
+
+  // OTP logic
+  const inputs = document.querySelectorAll('.otp-box');
+  inputs.forEach((inp, i) => {
+    inp.addEventListener('input', () => {
+      inp.value = inp.value.replace(/\D/g,'').slice(-1);
+      inp.classList.toggle('filled', inp.value !== '');
+      if (inp.value && i < inputs.length - 1) inputs[i+1].focus();
+    });
+    inp.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !inp.value && i > 0) {
+        inputs[i-1].focus(); inputs[i-1].value = '';
+        inputs[i-1].classList.remove('filled');
+      }
+    });
+    inp.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const pasted = e.clipboardData.getData('text').replace(/\D/g,'').slice(0,6);
+      pasted.split('').forEach((ch, j) => {
+        if (inputs[i+j]) { inputs[i+j].value = ch; inputs[i+j].classList.add('filled'); }
+      });
+      const next = inputs[Math.min(i + pasted.length, inputs.length-1)];
+      if (next) next.focus();
+    });
+  });
+
+  // Focus first input
+  inputs[0]?.focus();
+
+  function showAlert(msg, type) {
+    const box = document.getElementById('alert-box');
+    box.className = `alert ${type}`;
+    box.innerHTML = `<i class="fa-solid ${type==='error'?'fa-circle-xmark':'fa-circle-check'}"></i> ${msg}`;
+    box.classList.remove('hidden');
+    if (type !== 'error') setTimeout(() => box.classList.add('hidden'), 4000);
+  }
+
+  async function verifyCode() {
+    const code = [...inputs].map(i => i.value).join('');
+    if (code.length < 6) return showAlert('Ingresa el código completo.', 'error');
+
+    document.getElementById('btn-verify').disabled = true;
+    document.getElementById('btn-text').classList.add('hidden');
+    document.getElementById('btn-spin').classList.remove('hidden');
+
+    try {
+      const res  = await fetch('/api/auth/verify-email', {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ email, code })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        document.getElementById('verify-view').style.display  = 'none';
+        document.getElementById('success-view').classList.add('show');
+      } else {
+        showAlert(data.message || 'Código incorrecto.', 'error');
+      }
+    } catch { showAlert('Error de conexión.', 'error'); }
+    finally {
+      document.getElementById('btn-verify').disabled = false;
+      document.getElementById('btn-text').classList.remove('hidden');
+      document.getElementById('btn-spin').classList.add('hidden');
+    }
+  }
+
+  let countdownTimer;
+  function startCountdown(seconds) {
+    const btn = document.getElementById('resend-btn');
+    const cd  = document.getElementById('countdown');
+    btn.disabled = true;
+    cd.classList.remove('hidden');
+    let left = seconds;
+    cd.textContent = `Puedes reenviar en ${left}s`;
+    countdownTimer = setInterval(() => {
+      left--;
+      cd.textContent = `Puedes reenviar en ${left}s`;
+      if (left <= 0) {
+        clearInterval(countdownTimer);
+        btn.disabled = false;
+        cd.classList.add('hidden');
+      }
+    }, 1000);
+  }
+
+  async function resendCode() {
+    if (!email) return;
+    try {
+      await fetch('/api/auth/resend-verification', {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ email })
+      });
+      showAlert('Código reenviado. Revisa tu correo.', 'success');
+      startCountdown(60);
+    } catch { showAlert('Error al reenviar.', 'error'); }
+  }
+
+  // Start countdown on load
+  startCountdown(60);
+</script>
+</body>
+</html>

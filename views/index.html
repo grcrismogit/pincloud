@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PinCloud – Descubre ideas que inspiran</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    :root {
+      --red: #e60023;
+      --red-dark: #ad081b;
+      --text: #111;
+      --muted: #767676;
+      --border: #cdcdcd;
+      --bg: #fff;
+      --gray: #efefef;
+    }
+    body { font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; min-height: 100dvh; }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; height: 60px;
+      background: var(--bg); z-index: 100;
+      display: flex; align-items: center; padding: 0 1.5rem; gap: 0.5rem;
+      border-bottom: 1px solid transparent;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 0.4rem;
+      text-decoration: none; color: var(--red);
+      font-weight: 900; font-size: 1.15rem; flex-shrink: 0;
+    }
+    .nav-logo-icon {
+      width: 32px; height: 32px; background: var(--red);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1rem; font-weight: 900;
+    }
+    .nav-link-plain {
+      padding: 0.5rem 0.85rem; border-radius: 999px;
+      font-size: 0.95rem; font-weight: 600; color: var(--text);
+      text-decoration: none; transition: background 0.15s; white-space: nowrap;
+    }
+    .nav-link-plain:hover { background: var(--gray); }
+
+    .nav-search {
+      flex: 1; max-width: 560px;
+      display: flex; align-items: center;
+      background: var(--gray); border: 2px solid transparent;
+      border-radius: 999px; padding: 0 1rem; height: 44px; gap: 0.5rem;
+      transition: border-color 0.15s, background 0.15s;
+      cursor: text;
+    }
+    .nav-search:focus-within { background: #fff; border-color: var(--text); }
+    .nav-search i { color: var(--muted); font-size: 0.95rem; }
+    .nav-search input { flex: 1; border: none; background: transparent; font-size: 0.95rem; font-weight: 500; color: var(--text); outline: none; }
+    .nav-search input::placeholder { color: var(--muted); font-weight: 400; }
+
+    .nav-spacer { flex: 1; }
+    .nav-right { display: flex; align-items: center; gap: 0.4rem; flex-shrink: 0; }
+    .nav-right a { padding: 0.5rem 0.85rem; border-radius: 999px; font-size: 0.9rem; font-weight: 600; color: var(--text); text-decoration: none; transition: background 0.15s; white-space: nowrap; }
+    .nav-right a:hover { background: var(--gray); }
+    .btn-login {
+      padding: 0.6rem 1.2rem; border-radius: 999px; border: none;
+      background: var(--red); color: #fff; font-size: 0.95rem; font-weight: 700;
+      cursor: pointer; transition: background 0.15s; white-space: nowrap;
+    }
+    .btn-login:hover { background: var(--red-dark); }
+    .btn-register {
+      padding: 0.6rem 1.2rem; border-radius: 999px;
+      border: 2px solid var(--text); background: #fff;
+      color: var(--text); font-size: 0.95rem; font-weight: 700;
+      cursor: pointer; transition: background 0.15s; white-space: nowrap;
+    }
+    .btn-register:hover { background: var(--gray); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh; display: flex; align-items: center;
+      padding: 80px 4rem 2rem; gap: 3rem;
+      background: linear-gradient(180deg, #fff 0%, #f5f5f5 100%);
+      position: relative; overflow: hidden;
+    }
+    .hero-left { flex: 0 0 auto; max-width: 420px; }
+    .hero-left h1 { font-size: clamp(2.2rem, 4vw, 3.4rem); font-weight: 900; line-height: 1.08; letter-spacing: -0.035em; margin-bottom: 1.5rem; color: var(--text); text-wrap: balance; }
+    .hero-btns { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .btn-hero-primary {
+      padding: 0.9rem 1.85rem; border-radius: 999px; border: none;
+      background: var(--red); color: #fff; font-size: 1.05rem; font-weight: 700;
+      cursor: pointer; font-family: inherit;
+      transition: background 160ms cubic-bezier(0.2,0,0,1), transform 160ms cubic-bezier(0.2,0,0,1), box-shadow 160ms cubic-bezier(0.2,0,0,1);
+      box-shadow: 0 2px 12px rgba(230,0,35,0.3);
+    }
+    .btn-hero-primary:hover  { background: var(--red-dark); transform: scale(1.02); }
+    .btn-hero-primary:active { transform: scale(0.96); box-shadow: none; }
+    .btn-hero-secondary {
+      padding: 0.9rem 1.85rem; border-radius: 999px;
+      border: 2px solid var(--text); background: #fff;
+      color: var(--text); font-size: 1.05rem; font-weight: 700;
+      cursor: pointer; font-family: inherit;
+      transition: background 160ms cubic-bezier(0.2,0,0,1), transform 160ms cubic-bezier(0.2,0,0,1);
+    }
+    .btn-hero-secondary:hover  { background: var(--gray); transform: scale(1.02); }
+    .btn-hero-secondary:active { transform: scale(0.96); }
+
+    /* HERO COLLAGE */
+    .hero-right { flex: 1; display: flex; justify-content: center; align-items: center; min-height: 480px; position: relative; }
+    .collage { position: relative; width: 420px; height: 480px; }
+    .collage-img {
+      position: absolute; border-radius: 18px; overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      transition: transform 0.3s ease;
+    }
+    .collage-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .collage-img:hover { transform: scale(1.03) rotate(0deg) !important; z-index: 10; }
+    .ci-1 { width: 160px; height: 200px; top: 20px; left: 20px; transform: rotate(-3deg); z-index: 3; }
+    .ci-2 { width: 200px; height: 260px; top: 0; left: 180px; transform: rotate(2deg); z-index: 4; }
+    .ci-3 { width: 130px; height: 160px; top: 10px; left: 300px; transform: rotate(-1deg); z-index: 2; }
+    .ci-4 { width: 180px; height: 200px; top: 220px; left: 0; transform: rotate(1deg); z-index: 3; }
+    .ci-5 { width: 160px; height: 180px; top: 240px; left: 190px; transform: rotate(-2deg); z-index: 4; }
+    .ci-6 { width: 120px; height: 150px; top: 260px; left: 310px; transform: rotate(3deg); z-index: 2; }
+
+    /* ── SECTION ── */
+    .section { padding: 3rem 2rem; background: var(--gray); }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; text-align: center; margin-bottom: 0.5rem; letter-spacing: -0.025em; text-wrap: balance; }
+    .section-sub   { font-size: 1rem; color: var(--muted); text-align: center; margin-bottom: 2rem; }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .preview-grid .pg-main {
+      grid-row: span 2;
+      border-radius: 18px; overflow: hidden;
+      aspect-ratio: 2/3;
+    }
+    .preview-grid .pg-side {
+      border-radius: 18px; overflow: hidden;
+      aspect-ratio: 4/3;
+    }
+    .preview-grid img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
+    .preview-grid img:hover { transform: scale(1.03); }
+
+    /* ── FEATURES ── */
+    .features { padding: 4rem 2rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; }
+    .feature-card {
+      background: var(--gray); border-radius: 24px;
+      padding: 2rem; max-width: 280px; text-align: center;
+    }
+    .feature-icon { font-size: 2.5rem; color: var(--red); margin-bottom: 1rem; }
+    .feature-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .feature-card p  { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── FOOTER ── */
+    .footer { background: var(--gray); padding: 2rem; text-align: center; color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--border); }
+    .footer a { color: var(--muted); text-decoration: none; margin: 0 0.5rem; }
+    .footer a:hover { text-decoration: underline; }
+
+    /* ── MODAL OVERLAY ── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 200; padding: 1rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+    .modal-box {
+      background: #fff; border-radius: 24px;
+      width: 100%; max-width: 380px;
+      padding: 2.5rem 2.5rem 2rem;
+      text-align: center; position: relative;
+      transform: scale(0.95);
+      transition: transform 0.2s;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+    }
+    .modal-overlay.open .modal-box { transform: scale(1); }
+
+    .modal-close-btn {
+      position: absolute; top: 1rem; right: 1rem;
+      width: 36px; height: 36px; border-radius: 50%;
+      border: none; background: var(--gray); cursor: pointer;
+      font-size: 1rem; display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s;
+    }
+    .modal-close-btn:hover { background: #ddd; }
+
+    .modal-logo {
+      width: 46px; height: 46px; background: var(--red);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.25rem; color: #fff; font-size: 1.4rem; font-weight: 900;
+    }
+    .modal-box h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 1.5rem; line-height: 1.2; }
+
+    .modal-input {
+      width: 100%; border: 1px solid var(--border); border-radius: 10px;
+      padding: 0.9rem 1rem; font-size: 1rem; font-family: inherit;
+      color: var(--text); outline: none; margin-bottom: 0.75rem;
+      transition: border-color 0.15s;
+    }
+    .modal-input:focus { border-color: var(--text); }
+    .modal-input::placeholder { color: var(--muted); }
+
+    .input-wrap { position: relative; margin-bottom: 0.75rem; }
+    .input-wrap .modal-input { margin-bottom: 0; padding-right: 2.8rem; }
+    .input-wrap .eye-btn {
+      position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; color: var(--muted); font-size: 0.95rem;
+    }
+
+    .btn-modal-primary {
+      width: 100%; padding: 0.9rem; border-radius: 999px; border: none;
+      background: var(--red); color: #fff; font-size: 1rem; font-weight: 700;
+      cursor: pointer; margin-top: 0.25rem; transition: background 0.15s, transform 0.1s;
+      display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+    }
+    .btn-modal-primary:hover  { background: var(--red-dark); }
+    .btn-modal-primary:active { transform: scale(0.97); }
+    .btn-modal-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .modal-divider { display: flex; align-items: center; gap: 0.5rem; margin: 1rem 0; color: var(--muted); font-size: 0.78rem; font-weight: 700; }
+    .modal-divider::before, .modal-divider::after { content:''; flex:1; height:1px; background:var(--border); }
+
+    .modal-link { font-size: 0.87rem; color: var(--text); font-weight: 700; cursor: pointer; text-decoration: underline; background: none; border: none; }
+    .modal-link:hover { color: var(--red); }
+
+    .modal-footer-text { font-size: 0.82rem; color: var(--muted); margin-top: 1.25rem; border-top: 1px solid var(--border); padding-top: 1.25rem; }
+    .modal-footer-text button { color: var(--text); font-weight: 700; cursor: pointer; background: none; border: none; font-size: inherit; text-decoration: underline; }
+    .modal-footer-text button:hover { color: var(--red); }
+
+    .alert-modal {
+      padding: 0.65rem 0.9rem; border-radius: 8px;
+      font-size: 0.875rem; font-weight: 500; margin-bottom: 0.85rem;
+      display: flex; align-items: center; gap: 0.4rem; text-align: left;
+    }
+    .alert-modal.error   { background: #fff0f1; color: var(--red-dark); border: 1px solid #ffbdc3; }
+    .alert-modal.success { background: #ebf9f1; color: #00875a; border: 1px solid #b3e6cf; }
+    .hidden { display: none !important; }
+
+    .pwd-strength { margin: -0.4rem 0 0.75rem; }
+    .strength-bar { height: 3px; background: #e0e0e0; border-radius: 3px; overflow: hidden; }
+    .strength-bar span { display:block; height:100%; width:0; transition: width 0.3s, background 0.3s; border-radius:3px; }
+    .pwd-strength small { font-size: 0.72rem; font-weight: 600; margin-top: 3px; display: block; }
+
+    .input-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .input-row-2 .modal-input { margin-bottom: 0; }
+
+    @media (max-width: 768px) {
+      .hero { flex-direction: column; padding: 80px 1.5rem 2rem; text-align: center; }
+      .hero-btns { justify-content: center; }
+      .hero-right { display: none; }
+      .nav-right a { display: none; }
+      .preview-grid { grid-template-columns: 1fr 1fr; }
+      .preview-grid .pg-main { grid-row: span 1; aspect-ratio: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-icon"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>
+    <span>PinCloud</span>
+  </a>
+  <a href="#explorar" class="nav-link-plain">Explorar</a>
+  <div class="nav-search">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" placeholder="Encuentra ideas sobre decoración, viajes, moda, etc." id="hero-search"/>
+  </div>
+  <div class="nav-spacer"></div>
+  <div class="nav-right">
+    <a href="/informacion">Información</a>
+    <a href="/empresas">Empresas</a>
+    <a href="#" onclick="requireLoginThenCreate(event)">Crear</a>
+    <button class="btn-login" onclick="openModal('login-modal')">Iniciar sesión</button>
+    <button class="btn-register" onclick="openModal('register-modal')">Regístrate</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <h1>Crea la vida que deseas con PinCloud</h1>
+    <div class="hero-btns">
+      <button class="btn-hero-primary" onclick="openModal('register-modal')">Únete a PinCloud gratis</button>
+      <button class="btn-hero-secondary" onclick="openModal('login-modal')">Ya tengo una cuenta</button>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="collage">
+      <div class="collage-img ci-1"><img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=300" alt=""/></div>
+      <div class="collage-img ci-2"><img src="https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=300" alt=""/></div>
+      <div class="collage-img ci-3"><img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=300" alt=""/></div>
+      <div class="collage-img ci-4"><img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=300" alt=""/></div>
+      <div class="collage-img ci-5"><img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300" alt=""/></div>
+      <div class="collage-img ci-6"><img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=300" alt=""/></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 1 -->
+<section class="section" id="explorar">
+  <h2 class="section-title">Descubre ideas para cada momento</h2>
+  <p class="section-sub">Desde decoración del hogar hasta recetas y moda — todo en un solo lugar.</p>
+  <div class="preview-grid">
+    <div class="pg-main"><img src="https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=500" alt=""/></div>
+    <div class="pg-side"><img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=500" alt=""/></div>
+    <div class="pg-side"><img src="https://images.unsplash.com/photo-1590301157890-4810ed352733?w=500" alt=""/></div>
+    <div class="pg-main"><img src="https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=500" alt=""/></div>
+    <div class="pg-side"><img src="https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=500" alt=""/></div>
+    <div class="pg-side"><img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=500" alt=""/></div>
+  </div>
+</section>
+
+<!-- SECTION 2 -->
+<section class="section" style="background:#fff;">
+  <h2 class="section-title">¿Qué está de moda hoy?</h2>
+  <p class="section-sub">Las ideas más guardadas por nuestra comunidad.</p>
+  <div class="preview-grid">
+    <div class="pg-main"><img src="https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=500" alt=""/></div>
+    <div class="pg-side"><img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=500" alt=""/></div>
+    <div class="pg-side"><img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=500" alt=""/></div>
+    <div class="pg-main"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500" alt=""/></div>
+    <div class="pg-side"><img src="https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=500" alt=""/></div>
+    <div class="pg-side"><img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=500" alt=""/></div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="feature-card">
+    <div class="feature-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+    <h3>Explora millones de ideas</h3>
+    <p>Encuentra inspiración para decoración, recetas, moda, viajes y mucho más.</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon"><i class="fa-solid fa-bookmark"></i></div>
+    <h3>Guarda lo que te inspira</h3>
+    <p>Organiza tus ideas favoritas en tableros personalizados para volver a ellas cuando quieras.</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+    <h3>Comparte tu creatividad</h3>
+    <p>Sube tus propias fotos e ideas y compártelas con una comunidad apasionada.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p style="margin-bottom:0.5rem;">
+    <a href="#">Términos del servicio</a>
+    <a href="#">Política de privacidad</a>
+    <a href="#">Ayuda</a>
+    <a href="#">Sobre PinCloud</a>
+  </p>
+  <p>© 2026 PinCloud — Proyecto Integrador · Ingeniería en Sistemas</p>
+</footer>
+
+<!-- ══════════ LOGIN MODAL ══════════ -->
+<div class="modal-overlay" id="login-modal" onclick="handleOverlayClick(event,'login-modal')">
+  <div class="modal-box">
+    <button class="modal-close-btn" onclick="closeModal('login-modal')"><i class="fa-solid fa-xmark"></i></button>
+    <div class="modal-logo"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>
+    <h2>Te damos la bienvenida a PinCloud</h2>
+
+    <div id="login-alert" class="alert-modal hidden"></div>
+
+    <form id="login-form" novalidate>
+      <input type="email" id="login-email" class="modal-input" placeholder="Correo electrónico" autocomplete="email" required/>
+      <div class="input-wrap">
+        <input type="password" id="login-password" class="modal-input" placeholder="Contraseña" autocomplete="current-password" required/>
+        <button type="button" class="eye-btn" onclick="togglePwd('login-password','eye-login')">
+          <i class="fa-solid fa-eye" id="eye-login"></i>
+        </button>
+      </div>
+      <button type="button" class="modal-link" onclick="switchToForgot()" style="display:block;margin-bottom:0.85rem;color:var(--red);">¿Olvidaste tu contraseña?</button>
+      <button type="submit" class="btn-modal-primary" id="btn-login-submit">
+        <span class="btn-text">Iniciar sesión</span>
+        <span class="hidden"><i class="fa-solid fa-spinner fa-spin"></i></span>
+      </button>
+    </form>
+
+    <div class="modal-divider"><span>o</span></div>
+
+    <div class="modal-footer-text">
+      ¿Aún no estás en PinCloud? <button onclick="switchModal('login-modal','register-modal')">Regístrate</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ REGISTER MODAL ══════════ -->
+<div class="modal-overlay" id="register-modal" onclick="handleOverlayClick(event,'register-modal')">
+  <div class="modal-box">
+    <button class="modal-close-btn" onclick="closeModal('register-modal')"><i class="fa-solid fa-xmark"></i></button>
+    <div class="modal-logo"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>
+    <h2>Únete a PinCloud</h2>
+
+    <div id="register-alert" class="alert-modal hidden"></div>
+
+    <form id="register-form" novalidate>
+      <input type="email" id="reg-email" class="modal-input" placeholder="Correo electrónico" required/>
+      <div class="input-wrap">
+        <input type="password" id="reg-password" class="modal-input" placeholder="Crea una contraseña" required/>
+        <button type="button" class="eye-btn" onclick="togglePwd('reg-password','eye-reg')">
+          <i class="fa-solid fa-eye" id="eye-reg"></i>
+        </button>
+      </div>
+      <div class="pwd-strength">
+        <div class="strength-bar"><span id="strength-fill"></span></div>
+        <small id="strength-text" style="color:var(--muted)"></small>
+      </div>
+      <div class="input-row-2">
+        <input type="text" id="reg-name"     class="modal-input" placeholder="Nombre" required/>
+        <input type="text" id="reg-username" class="modal-input" placeholder="Usuario" required/>
+      </div>
+      <p style="font-size:0.78rem;color:var(--muted);margin-bottom:1rem;text-align:left;line-height:1.5;">
+        Al continuar, aceptas los <a href="#" style="color:var(--text);font-weight:700;">Términos del servicio</a> y la <a href="#" style="color:var(--text);font-weight:700;">Política de privacidad</a>.
+      </p>
+      <button type="submit" class="btn-modal-primary" id="btn-register-submit">
+        <span class="btn-text">Continuar</span>
+        <span class="hidden"><i class="fa-solid fa-spinner fa-spin"></i></span>
+      </button>
+    </form>
+
+    <div class="modal-footer-text">
+      ¿Ya eres miembro? <button onclick="switchModal('register-modal','login-modal')">Inicia sesión</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ FORGOT MODAL ══════════ -->
+<div class="modal-overlay" id="forgot-modal" onclick="handleOverlayClick(event,'forgot-modal')">
+  <div class="modal-box">
+    <button class="modal-close-btn" onclick="closeModal('forgot-modal')"><i class="fa-solid fa-xmark"></i></button>
+    <div class="modal-logo"><i class="fa-solid fa-key" style="font-size:1.1rem;"></i></div>
+    <h2>¿Olvidaste tu contraseña?</h2>
+    <p style="font-size:0.9rem;color:var(--muted);margin-bottom:1.25rem;">Ingresa tu correo y te enviaremos un código.</p>
+
+    <div id="forgot-alert" class="alert-modal hidden"></div>
+
+    <!-- step 1 -->
+    <div id="forgot-step-1">
+      <input type="email" id="forgot-email" class="modal-input" placeholder="Correo electrónico"/>
+      <button class="btn-modal-primary" id="btn-forgot-send" onclick="sendForgotCode()">
+        <span class="btn-text">Enviar código</span>
+        <span class="hidden"><i class="fa-solid fa-spinner fa-spin"></i></span>
+      </button>
+    </div>
+    <!-- step 2 -->
+    <div id="forgot-step-2" class="hidden">
+      <p style="font-size:0.88rem;color:var(--muted);margin-bottom:1rem;">Ingresa el código de 6 dígitos enviado a <strong id="forgot-email-show"></strong></p>
+      <div style="display:flex;justify-content:center;gap:0.4rem;margin-bottom:1rem;">
+        <input type="text" class="otp-in" maxlength="1" inputmode="numeric" style="width:44px;height:52px;text-align:center;font-size:1.3rem;font-weight:700;border:2px solid var(--border);border-radius:10px;outline:none;"/>
+        <input type="text" class="otp-in" maxlength="1" inputmode="numeric" style="width:44px;height:52px;text-align:center;font-size:1.3rem;font-weight:700;border:2px solid var(--border);border-radius:10px;outline:none;"/>
+        <input type="text" class="otp-in" maxlength="1" inputmode="numeric" style="width:44px;height:52px;text-align:center;font-size:1.3rem;font-weight:700;border:2px solid var(--border);border-radius:10px;outline:none;"/>
+        <input type="text" class="otp-in" maxlength="1" inputmode="numeric" style="width:44px;height:52px;text-align:center;font-size:1.3rem;font-weight:700;border:2px solid var(--border);border-radius:10px;outline:none;"/>
+        <input type="text" class="otp-in" maxlength="1" inputmode="numeric" style="width:44px;height:52px;text-align:center;font-size:1.3rem;font-weight:700;border:2px solid var(--border);border-radius:10px;outline:none;"/>
+        <input type="text" class="otp-in" maxlength="1" inputmode="numeric" style="width:44px;height:52px;text-align:center;font-size:1.3rem;font-weight:700;border:2px solid var(--border);border-radius:10px;outline:none;"/>
+      </div>
+      <button class="btn-modal-primary" onclick="verifyForgotCode()">Verificar código</button>
+    </div>
+    <!-- step 3 -->
+    <div id="forgot-step-3" class="hidden">
+      <div class="input-wrap" style="margin-bottom:0.75rem;">
+        <input type="password" id="new-pwd" class="modal-input" placeholder="Nueva contraseña" style="margin-bottom:0;padding-right:2.8rem;"/>
+        <button type="button" class="eye-btn" onclick="togglePwd('new-pwd','eye-newpwd')"><i class="fa-solid fa-eye" id="eye-newpwd"></i></button>
+      </div>
+      <input type="password" id="confirm-pwd" class="modal-input" placeholder="Confirmar contraseña"/>
+      <button class="btn-modal-primary" onclick="resetPassword()">Cambiar contraseña</button>
+    </div>
+    <!-- step 4 -->
+    <div id="forgot-step-4" class="hidden" style="text-align:center;padding:1rem 0;">
+      <i class="fa-solid fa-circle-check" style="font-size:3rem;color:#00875a;margin-bottom:1rem;display:block;"></i>
+      <p style="font-weight:700;margin-bottom:1rem;">¡Contraseña actualizada!</p>
+      <button class="btn-modal-primary" onclick="closeModal('forgot-modal');openModal('login-modal')">Ir a iniciar sesión</button>
+    </div>
+
+    <div class="modal-footer-text" style="margin-top:1rem;">
+      <button onclick="switchModal('forgot-modal','login-modal')">← Volver al inicio de sesión</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Crear requiere login ──
+  function requireLoginThenCreate(e) {
+    e.preventDefault();
+    const token = localStorage.getItem('token');
+    if (token) { window.location.href = '/gallery'; }
+    else { openModal('login-modal'); }
+  }
+
+  // Abrir modal si viene de otra página (informacion/empresas)
+  const _pendingModal = sessionStorage.getItem('openModal');
+  if (_pendingModal) { sessionStorage.removeItem('openModal'); setTimeout(() => openModal(_pendingModal), 100); }
+
+  // ── Modal control ──
+  function openModal(id) {
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function switchModal(from, to) { closeModal(from); openModal(to); }
+  function handleOverlayClick(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
+  function switchToForgot() { closeModal('login-modal'); openModal('forgot-modal'); }
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open')); });
+
+  // Search enter
+  document.getElementById('hero-search').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') openModal('login-modal');
+  });
+  document.getElementById('hero-search').addEventListener('focus', () => openModal('login-modal'));
+
+  // ── Utilities ──
+  function togglePwd(inputId, iconId) {
+    const inp  = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+    if (inp.type === 'password') { inp.type = 'text'; icon.classList.replace('fa-eye','fa-eye-slash'); }
+    else                         { inp.type = 'password'; icon.classList.replace('fa-eye-slash','fa-eye'); }
+  }
+
+  function showAlert(boxId, msg, type) {
+    const box = document.getElementById(boxId);
+    box.className = `alert-modal ${type}`;
+    box.innerHTML = `<i class="fa-solid ${type==='error'?'fa-circle-xmark':'fa-circle-check'}"></i> ${msg}`;
+    box.classList.remove('hidden');
+    if (type !== 'error') setTimeout(() => box.classList.add('hidden'), 4000);
+  }
+
+  function setBtn(btnId, loading) {
+    const btn    = document.getElementById(btnId);
+    const spans  = btn.querySelectorAll('span');
+    btn.disabled = loading;
+    spans[0].classList.toggle('hidden', loading);
+    spans[1].classList.toggle('hidden', !loading);
+  }
+
+  function pwdStrength(pwd) {
+    let s = 0;
+    if (pwd.length >= 8)  s++;
+    if (pwd.length >= 12) s++;
+    if (/[A-Z]/.test(pwd)) s++;
+    if (/[0-9]/.test(pwd)) s++;
+    if (/[^A-Za-z0-9]/.test(pwd)) s++;
+    return Math.min(s, 5);
+  }
+
+  document.getElementById('reg-password').addEventListener('input', function() {
+    const score  = pwdStrength(this.value);
+    const colors = ['','#e60023','#e67e22','#f1c40f','#2ecc71','#27ae60'];
+    const labels = ['','Muy débil','Débil','Regular','Fuerte','Muy fuerte'];
+    document.getElementById('strength-fill').style.cssText = `width:${score*20}%;background:${colors[score]}`;
+    const st = document.getElementById('strength-text');
+    st.textContent = this.value ? labels[score] : '';
+    st.style.color = colors[score];
+  });
+
+  // ── LOGIN ──
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email    = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    if (!email || !password) return showAlert('login-alert','Completa todos los campos.','error');
+    setBtn('btn-login-submit', true);
+    try {
+      const res  = await fetch('/api/auth/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, password}) });
+      const data = await res.json();
+      if (res.ok) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user',  JSON.stringify(data.user));
+        window.location.href = '/gallery';
+      } else { showAlert('login-alert', data.message || 'Credenciales incorrectas.', 'error'); }
+    } catch { showAlert('login-alert','Error de conexión.','error'); }
+    finally  { setBtn('btn-login-submit', false); }
+  });
+
+  // ── REGISTER ──
+  document.getElementById('register-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email    = document.getElementById('reg-email').value.trim();
+    const password = document.getElementById('reg-password').value;
+    const name     = document.getElementById('reg-name').value.trim();
+    const username = document.getElementById('reg-username').value.trim();
+    if (!email || !password || !name || !username) return showAlert('register-alert','Completa todos los campos.','error');
+    if (password.length < 8) return showAlert('register-alert','Mínimo 8 caracteres.','error');
+    setBtn('btn-register-submit', true);
+    try {
+      const res  = await fetch('/api/auth/register', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({name, username, email, password}) });
+      const data = await res.json();
+      if (res.ok) {
+        showAlert('register-alert','¡Cuenta creada! Revisa tu correo.','success');
+        setTimeout(() => { closeModal('register-modal'); window.location.href = `/verify-email?email=${encodeURIComponent(email)}`; }, 2000);
+      } else { showAlert('register-alert', data.message || 'Error al registrarse.', 'error'); }
+    } catch { showAlert('register-alert','Error de conexión.','error'); }
+    finally  { setBtn('btn-register-submit', false); }
+  });
+
+  // ── FORGOT PASSWORD ──
+  let forgotEmail = '', forgotToken = '';
+
+  async function sendForgotCode() {
+    forgotEmail = document.getElementById('forgot-email').value.trim();
+    if (!forgotEmail) return showAlert('forgot-alert','Ingresa tu correo.','error');
+    setBtn('btn-forgot-send', true);
+    try {
+      const res = await fetch('/api/auth/forgot-password', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email: forgotEmail}) });
+      if (res.ok) {
+        document.getElementById('forgot-step-1').classList.add('hidden');
+        document.getElementById('forgot-step-2').classList.remove('hidden');
+        document.getElementById('forgot-email-show').textContent = forgotEmail;
+        setupOtp();
+      } else { const d = await res.json(); showAlert('forgot-alert', d.message||'Error.','error'); }
+    } catch { showAlert('forgot-alert','Error de conexión.','error'); }
+    finally  { setBtn('btn-forgot-send', false); }
+  }
+
+  function setupOtp() {
+    const inputs = document.querySelectorAll('#forgot-step-2 .otp-in');
+    inputs.forEach((inp, i) => {
+      inp.addEventListener('input', () => {
+        inp.value = inp.value.replace(/\D/g,'').slice(-1);
+        if (inp.value && i < inputs.length-1) inputs[i+1].focus();
+      });
+      inp.addEventListener('keydown', (e) => {
+        if (e.key==='Backspace' && !inp.value && i>0) { inputs[i-1].focus(); inputs[i-1].value=''; }
+      });
+    });
+  }
+
+  async function verifyForgotCode() {
+    const code = [...document.querySelectorAll('#forgot-step-2 .otp-in')].map(i=>i.value).join('');
+    if (code.length < 6) return showAlert('forgot-alert','Ingresa el código completo.','error');
+    try {
+      const res  = await fetch('/api/auth/verify-reset-code', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email: forgotEmail, code}) });
+      const data = await res.json();
+      if (res.ok) {
+        forgotToken = data.resetToken;
+        document.getElementById('forgot-step-2').classList.add('hidden');
+        document.getElementById('forgot-step-3').classList.remove('hidden');
+      } else { showAlert('forgot-alert', data.message||'Código incorrecto.','error'); }
+    } catch { showAlert('forgot-alert','Error de conexión.','error'); }
+  }
+
+  async function resetPassword() {
+    const newPwd  = document.getElementById('new-pwd').value;
+    const confirm = document.getElementById('confirm-pwd').value;
+    if (!newPwd || !confirm) return showAlert('forgot-alert','Completa los campos.','error');
+    if (newPwd !== confirm)  return showAlert('forgot-alert','Las contraseñas no coinciden.','error');
+    if (newPwd.length < 8)   return showAlert('forgot-alert','Mínimo 8 caracteres.','error');
+    try {
+      const res = await fetch('/api/auth/reset-password', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email: forgotEmail, resetToken: forgotToken, newPassword: newPwd}) });
+      if (res.ok) {
+        document.getElementById('forgot-step-3').classList.add('hidden');
+        document.getElementById('forgot-step-4').classList.remove('hidden');
+      } else { const d = await res.json(); showAlert('forgot-alert', d.message||'Error.','error'); }
+    } catch { showAlert('forgot-alert','Error de conexión.','error'); }
+  }
+</script>
+</body>
+</html>
