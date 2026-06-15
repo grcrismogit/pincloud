@@ -137,7 +137,7 @@ export default function Home() {
       </section>
 
       <footer className="pub-footer">
-        <p>© 2026 PinCloud · <a href="/informacion">Información</a> · <a href="/empresas">Empresas</a></p>
+        <p>© 2026 PinCloud · <a href="/informacion">Información</a></p>
       </footer>
 
       {modal && (

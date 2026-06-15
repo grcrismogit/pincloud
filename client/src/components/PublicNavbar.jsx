@@ -15,7 +15,6 @@ export default function PublicNavbar({ onLogin, onRegister }) {
 
       <Link to="/"            className={`pub-nav-link${pathname === '/' ? ' active' : ''}`}>Inicio</Link>
       <Link to="/informacion" className={`pub-nav-link${pathname === '/informacion' ? ' active' : ''}`}>Información</Link>
-      <Link to="/empresas"    className={`pub-nav-link${pathname === '/empresas' ? ' active' : ''}`}>Empresas</Link>
 
       {onLogin    && <button className="btn-nav btn-nav-outline"  onClick={onLogin}>Iniciar sesión</button>}
       {onRegister && <button className="btn-nav btn-nav-primary"  onClick={onRegister}>Crear cuenta</button>}
