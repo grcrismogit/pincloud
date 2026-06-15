@@ -27,6 +27,10 @@ export default function Profile() {
 
   useEffect(() => { fetchSaved() }, [fetchSaved])
 
+  function handleDelete(id) {
+    setPins(prev => prev.filter(p => p._id !== id))
+  }
+
   const filtered = search.trim()
     ? pins.filter(p =>
         p.title?.toLowerCase().includes(search.toLowerCase()) ||
@@ -77,7 +81,7 @@ export default function Profile() {
                 pin={pin}
                 index={i}
                 onOpen={setDetailPin}
-                onLikeChange={fetchSaved}
+                onDelete={handleDelete}
               />
             ))}
           </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { FaImages, FaSpinner } from 'react-icons/fa6'
+import { FaImages, FaSpinner, FaPlus } from 'react-icons/fa6'
 import Sidebar from '../components/Sidebar.jsx'
 import Topbar from '../components/Topbar.jsx'
 import CategoryBar from '../components/CategoryBar.jsx'
@@ -11,10 +11,10 @@ import { apiFetch } from '../utils/helpers.js'
 
 export default function Gallery() {
   const { token } = useAuth()
-  const [pins,      setPins]      = useState([])
-  const [loading,   setLoading]   = useState(true)
-  const [search,    setSearch]    = useState('')
-  const [category,  setCategory]  = useState('Todos')
+  const [pins,       setPins]       = useState([])
+  const [loading,    setLoading]    = useState(true)
+  const [search,     setSearch]     = useState('')
+  const [category,   setCategory]   = useState('Todos')
   const [showUpload, setShowUpload] = useState(false)
   const [detailPin,  setDetailPin]  = useState(null)
 
@@ -22,11 +22,11 @@ export default function Gallery() {
     setLoading(true)
     try {
       const params = new URLSearchParams()
-      if (search.trim())        params.set('q',        search.trim())
-      if (category !== 'Todos') params.set('category',  category.toLowerCase())
+      if (search.trim())        params.set('q',       search.trim())
+      if (category !== 'Todos') params.set('category', category.toLowerCase())
       const data = await apiFetch(`/api/pins?${params}`, {}, token)
       const list = data.pins || data || []
-      setPins([...list].sort(() => Math.random() - 0.5))
+      setPins(search.trim() ? list : [...list].sort(() => Math.random() - 0.5))
     } catch {}
     finally { setLoading(false) }
   }, [search, category, token])
@@ -35,6 +35,10 @@ export default function Gallery() {
     const id = setTimeout(fetchPins, 300)
     return () => clearTimeout(id)
   }, [fetchPins])
+
+  function handleDelete(id) {
+    setPins(prev => prev.filter(p => p._id !== id))
+  }
 
   return (
     <>
@@ -50,8 +54,13 @@ export default function Gallery() {
         ) : pins.length === 0 ? (
           <div className="empty-state" role="status">
             <FaImages aria-hidden="true" />
-            <h3>Aún no hay pins aquí</h3>
-            <p>Sé el primero en publicar o prueba otra categoría.</p>
+            <h3>{search ? 'Sin resultados' : 'Aún no hay pins aquí'}</h3>
+            <p>{search ? 'Prueba con otra búsqueda.' : 'Sé el primero en publicar algo.'}</p>
+            {!search && (
+              <button className="btn-red" style={{ marginTop: '1rem' }} onClick={() => setShowUpload(true)}>
+                <FaPlus aria-hidden="true" /> Subir primer pin
+              </button>
+            )}
           </div>
         ) : (
           <div className="masonry-grid">
@@ -61,7 +70,7 @@ export default function Gallery() {
                 pin={pin}
                 index={i}
                 onOpen={setDetailPin}
-                onLikeChange={fetchPins}
+                onDelete={handleDelete}
               />
             ))}
           </div>

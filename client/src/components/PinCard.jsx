@@ -1,15 +1,21 @@
 import { useState } from 'react'
-import { FaHeart, FaRegHeart, FaExpand } from 'react-icons/fa6'
+import { FaHeart, FaRegHeart, FaExpand, FaTrash } from 'react-icons/fa6'
 import { useAuth } from '../context/AuthContext.jsx'
 import { apiFetch, avatarInitial, normalizePin } from '../utils/helpers.js'
 
-export default function PinCard({ pin: rawPin, index = 0, onOpen, onLikeChange }) {
-  const { token } = useAuth()
+export default function PinCard({ pin: rawPin, index = 0, onOpen, onDelete }) {
+  const { token, user } = useAuth()
   const pin = normalizePin(rawPin)
 
-  const [liked, setLiked] = useState(pin.liked || false)
-  const [likes, setLikes] = useState(pin.likesCount)
-  const [saved, setSaved] = useState(pin.saved || false)
+  const [liked,    setLiked]    = useState(pin.liked || false)
+  const [likes,    setLikes]    = useState(pin.likesCount)
+  const [saved,    setSaved]    = useState(pin.saved || false)
+  const [imgError, setImgError] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+
+  const isOwner = user?.id && rawPin.author?._id
+    ? rawPin.author._id === user.id
+    : false
 
   async function toggleLike(e) {
     e.stopPropagation()
@@ -19,7 +25,6 @@ export default function PinCard({ pin: rawPin, index = 0, onOpen, onLikeChange }
     setLikes(l => next ? l + 1 : l - 1)
     try {
       await apiFetch(`/api/pins/${pin._id}/like`, { method: 'POST' }, token)
-      onLikeChange?.()
     } catch {
       setLiked(!next)
       setLikes(l => next ? l - 1 : l + 1)
@@ -37,6 +42,18 @@ export default function PinCard({ pin: rawPin, index = 0, onOpen, onLikeChange }
     }
   }
 
+  async function handleDelete(e) {
+    e.stopPropagation()
+    if (!confirm('¿Eliminar este pin?')) return
+    setDeleting(true)
+    try {
+      await apiFetch(`/api/pins/${pin._id}`, { method: 'DELETE' }, token)
+      onDelete?.(pin._id)
+    } catch {
+      setDeleting(false)
+    }
+  }
+
   return (
     <div
       className="pin-card"
@@ -44,13 +61,20 @@ export default function PinCard({ pin: rawPin, index = 0, onOpen, onLikeChange }
       onClick={() => onOpen(rawPin)}
     >
       <div className="pin-img-wrap">
-        <img
-          src={pin.imageUrl}
-          alt={pin.title}
-          loading="lazy"
-          decoding="async"
-          style={{ display: 'block', minHeight: '120px', background: 'var(--gray)' }}
-        />
+        {imgError ? (
+          <div className="pin-img-error" aria-label="Imagen no disponible">
+            <span>🖼️</span>
+          </div>
+        ) : (
+          <img
+            src={pin.imageUrl}
+            alt={pin.title}
+            loading="lazy"
+            decoding="async"
+            style={{ display: 'block', minHeight: '120px', background: 'var(--gray)' }}
+            onError={() => setImgError(true)}
+          />
+        )}
         <div className="pin-overlay">
           <div className="pin-ov-top">
             <button
@@ -60,6 +84,16 @@ export default function PinCard({ pin: rawPin, index = 0, onOpen, onLikeChange }
             >
               {saved ? 'Guardado' : 'Guardar'}
             </button>
+            {isOwner && (
+              <button
+                className="pin-act-btn pin-delete-btn"
+                onClick={handleDelete}
+                aria-label="Eliminar pin"
+                disabled={deleting}
+              >
+                <FaTrash aria-hidden="true" />
+              </button>
+            )}
           </div>
           <div className="pin-ov-bottom">
             <button
