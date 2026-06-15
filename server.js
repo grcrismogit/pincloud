@@ -1,6 +1,5 @@
 require('dotenv').config();
 
-// Validar variables de entorno requeridas antes de arrancar
 const REQUIRED_ENV = ['MONGO_URI','JWT_SECRET','AWS_REGION','AWS_ACCESS_KEY_ID','AWS_SECRET_ACCESS_KEY','S3_BUCKET_NAME','SES_FROM_EMAIL'];
 const missingEnv = REQUIRED_ENV.filter(v => !process.env[v]);
 if (missingEnv.length) {
@@ -14,15 +13,12 @@ const connectDB = require('./backend/config/db');
 
 const app = express();
 
-// Middleware
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Routes
 app.use('/api/auth', require('./backend/routes/auth'));
 app.use('/api/pins', require('./backend/routes/pins'));
 
-// Contact form — simple email via SES
 app.post('/api/contact', async (req, res) => {
   const { nombre, empresa, email, plan, mensaje } = req.body || {};
   if (!nombre || !empresa || !email || !plan)
@@ -45,16 +41,13 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
-// Serve React app (production build)
 const clientDist = path.join(__dirname, 'client', 'dist');
 app.use(express.static(clientDist));
 app.get('*', (req, res) => {
-  // Let API routes fall through; serve React for everything else
   if (req.path.startsWith('/api/')) return res.status(404).json({ message: 'Not found' });
   res.sendFile(path.join(clientDist, 'index.html'));
 });
 
-// Global error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: 'Error interno del servidor.' });

@@ -8,7 +8,6 @@ const Pin   = require('../models/Pin');
 const User  = require('../models/User');
 const { s3, rekognition } = require('../config/aws');
 
-// Categorías de Rekognition que bloqueamos
 const BLOCKED_LABELS = [
   'Explicit Nudity', 'Nudity', 'Graphic Male Nudity', 'Graphic Female Nudity',
   'Sexual Activity', 'Illustrated Nudity Or Sexual Activity',
@@ -29,7 +28,6 @@ async function moderateImage(bucket, key) {
 const router = express.Router();
 const BUCKET = process.env.S3_BUCKET_NAME;
 
-// GET /api/pins
 router.get('/', auth, async (req, res) => {
   try {
     const filter = {};
@@ -53,7 +51,6 @@ router.get('/', auth, async (req, res) => {
   } catch (err) { res.status(500).json({ message: 'Error al obtener pins.' }); }
 });
 
-// POST /api/pins/presign
 router.post('/presign', auth, async (req, res) => {
   try {
     const { filename, contentType } = req.body;
@@ -68,16 +65,13 @@ router.post('/presign', auth, async (req, res) => {
   } catch (err) { console.error(err); res.status(500).json({ message: 'Error generando URL.' }); }
 });
 
-// POST /api/pins
 router.post('/', auth, async (req, res) => {
   try {
     const { title, description, category, s3Key } = req.body;
     if (!title || !s3Key) return res.status(400).json({ message: 'Título e imagen requeridos.' });
 
-    // Moderación: analizar imagen antes de guardar
     const flagged = await moderateImage(BUCKET, s3Key).catch(() => []);
     if (flagged.length > 0) {
-      // Borrar la imagen de S3 para no dejar basura
       await s3.send(new (require('@aws-sdk/client-s3').DeleteObjectCommand)({ Bucket: BUCKET, Key: s3Key })).catch(() => {});
       return res.status(422).json({
         message: 'La imagen fue rechazada por contener contenido inapropiado.',
@@ -93,7 +87,6 @@ router.post('/', auth, async (req, res) => {
   } catch (err) { res.status(500).json({ message: 'Error al guardar pin.' }); }
 });
 
-// POST /api/pins/:id/save — toggle save
 router.post('/:id/save', auth, async (req, res) => {
   try {
     const pin  = await Pin.findById(req.params.id);
@@ -108,7 +101,6 @@ router.post('/:id/save', auth, async (req, res) => {
   } catch { res.status(500).json({ message: 'Error.' }); }
 });
 
-// POST /api/pins/:id/like — toggle like
 router.post('/:id/like', auth, async (req, res) => {
   try {
     const pin = await Pin.findById(req.params.id);
@@ -123,7 +115,6 @@ router.post('/:id/like', auth, async (req, res) => {
   } catch { res.status(500).json({ message: 'Error.' }); }
 });
 
-// POST /api/pins/:id/comment — add comment
 router.post('/:id/comment', auth, async (req, res) => {
   try {
     const { text } = req.body;
@@ -138,7 +129,6 @@ router.post('/:id/comment', auth, async (req, res) => {
   } catch { res.status(500).json({ message: 'Error al comentar.' }); }
 });
 
-// DELETE /api/pins/:id/comment/:commentId
 router.delete('/:id/comment/:commentId', auth, async (req, res) => {
   try {
     const pin     = await Pin.findById(req.params.id);

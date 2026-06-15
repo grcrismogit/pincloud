@@ -51,7 +51,6 @@ export default function PinCard({ pin: rawPin, index = 0, onOpen, onLikeChange }
           decoding="async"
           style={{ display: 'block', minHeight: '120px', background: 'var(--gray)' }}
         />
-        {/* overlay buttons are focusable individually — no aria-hidden on the wrapper */}
         <div className="pin-overlay">
           <div className="pin-ov-top">
             <button

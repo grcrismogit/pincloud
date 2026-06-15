@@ -6,7 +6,6 @@ export function escapeHtml(str = '') {
     .replace(/"/g, '&quot;')
 }
 
-// Normalize backend pin fields to consistent shape used by all components
 export function normalizePin(pin) {
   return {
     ...pin,

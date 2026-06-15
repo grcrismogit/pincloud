@@ -24,12 +24,12 @@ const FEATURES = [
 export default function Home() {
   const navigate = useNavigate()
   const { login } = useAuth()
-  const [modal,   setModal]   = useState(null)  // null | 'login' | 'register' | 'forgot'
+  const [modal,   setModal]   = useState(null)
   const [loading, setLoading] = useState(false)
   const [alert,   setAlert]   = useState({ type: '', msg: '' })
 
   const [loginData,  setLoginData]  = useState({ email: '', password: '' })
-  const [regData,    setRegData]    = useState({ nombre: '', email: '', password: '' })
+  const [regData,    setRegData]    = useState({ name: '', username: '', email: '', password: '' })
   const [forgotEmail, setForgotEmail] = useState('')
 
   useEffect(() => {
@@ -60,8 +60,8 @@ export default function Home() {
 
   async function handleRegister(e) {
     e.preventDefault(); setAlert({ type: '', msg: '' })
-    if (!regData.nombre || !regData.email || !regData.password) { setAlert({ type: 'error', msg: 'Completa todos los campos.' }); return }
-    if (regData.password.length < 6) { setAlert({ type: 'error', msg: 'La contraseña debe tener al menos 6 caracteres.' }); return }
+    if (!regData.name || !regData.username || !regData.email || !regData.password) { setAlert({ type: 'error', msg: 'Completa todos los campos.' }); return }
+    if (regData.password.length < 8) { setAlert({ type: 'error', msg: 'La contraseña debe tener al menos 8 caracteres.' }); return }
     setLoading(true)
     try {
       await apiFetch('/api/auth/register', { method: 'POST', body: JSON.stringify(regData) })
@@ -91,7 +91,6 @@ export default function Home() {
         onRegister={() => setModal('register')}
       />
 
-      {/* Hero */}
       <section className="hero-section">
         <div className="hero-left">
           <h1>Tu tablero de inspiración en la nube</h1>
@@ -111,7 +110,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features */}
       <section className="home-features">
         <div className="home-features-inner">
           <h2 className="home-section-title">Todo lo que necesitas para inspirarte</h2>
@@ -128,7 +126,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA */}
       <section className="home-cta">
         <h2>Únete a miles de creativos</h2>
         <p>Empieza a guardar y compartir tus ideas hoy mismo, es gratis.</p>
@@ -139,7 +136,6 @@ export default function Home() {
         <p>© 2026 PinCloud · <a href="/informacion">Información</a> · <a href="/empresas">Empresas</a></p>
       </footer>
 
-      {/* ── MODALS ── */}
       {modal && (
         <div className="home-modal-overlay" onClick={e => e.target === e.currentTarget && closeModal()}>
           <div className="home-modal" role="dialog" aria-modal="true">
@@ -181,7 +177,10 @@ export default function Home() {
                 <form onSubmit={handleRegister} noValidate>
                   <label htmlFor="reg-nombre" className="sr-only">Nombre completo</label>
                   <input id="reg-nombre" className="modal-input" type="text" placeholder="Nombre completo" autoComplete="name"
-                    value={regData.nombre} onChange={e => setRegData(p => ({ ...p, nombre: e.target.value }))} />
+                    value={regData.name} onChange={e => setRegData(p => ({ ...p, name: e.target.value }))} />
+                  <label htmlFor="reg-username" className="sr-only">Nombre de usuario</label>
+                  <input id="reg-username" className="modal-input" type="text" placeholder="Nombre de usuario (ej: cristopher23)" autoComplete="username"
+                    value={regData.username} onChange={e => setRegData(p => ({ ...p, username: e.target.value }))} />
                   <label htmlFor="reg-email" className="sr-only">Correo electrónico</label>
                   <input id="reg-email" className="modal-input" type="email" placeholder="Correo electrónico" autoComplete="email"
                     value={regData.email} onChange={e => setRegData(p => ({ ...p, email: e.target.value }))} />

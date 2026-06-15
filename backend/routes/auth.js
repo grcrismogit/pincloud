@@ -5,9 +5,8 @@ const User     = require('../models/User');
 const { sendVerificationEmail, sendPasswordResetEmail, generateCode } = require('../services/emailService');
 
 const router = express.Router();
-const CODE_TTL = 15 * 60 * 1000; // 15 min
+const CODE_TTL = 15 * 60 * 1000;
 
-// POST /api/auth/register
 router.post('/register', async (req, res) => {
   try {
     const { name, username, email, password } = req.body;
@@ -39,7 +38,6 @@ router.post('/register', async (req, res) => {
       await sendVerificationEmail(email, code);
     } catch (emailErr) {
       console.error('SES error:', emailErr.message);
-      // Cuenta creada pero email falló — avisamos al usuario sin bloquear el flujo
       return res.status(201).json({
         message: 'Cuenta creada, pero no se pudo enviar el correo de verificación. Usa "Reenviar código" en la pantalla de verificación.',
         emailError: true,
@@ -52,7 +50,6 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// POST /api/auth/verify-email
 router.post('/verify-email', async (req, res) => {
   try {
     const { email, code } = req.body;
@@ -73,7 +70,6 @@ router.post('/verify-email', async (req, res) => {
   }
 });
 
-// POST /api/auth/resend-verification
 router.post('/resend-verification', async (req, res) => {
   try {
     const { email } = req.body;
@@ -96,7 +92,6 @@ router.post('/resend-verification', async (req, res) => {
   }
 });
 
-// POST /api/auth/login
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -118,12 +113,10 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// POST /api/auth/forgot-password
 router.post('/forgot-password', async (req, res) => {
   try {
     const { email } = req.body;
     const user = await User.findOne({ email: email?.toLowerCase() });
-    // Always respond OK to avoid user enumeration
     if (!user || !user.isVerified) return res.json({ message: 'Si el correo existe, recibirás un código.' });
 
     const code = generateCode();
@@ -142,7 +135,6 @@ router.post('/forgot-password', async (req, res) => {
   }
 });
 
-// POST /api/auth/verify-reset-code
 router.post('/verify-reset-code', async (req, res) => {
   try {
     const { email, code } = req.body;
@@ -162,7 +154,6 @@ router.post('/verify-reset-code', async (req, res) => {
   }
 });
 
-// POST /api/auth/reset-password
 router.post('/reset-password', async (req, res) => {
   try {
     const { email, resetToken, newPassword } = req.body;

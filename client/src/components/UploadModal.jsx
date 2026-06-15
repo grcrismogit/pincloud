@@ -22,7 +22,6 @@ export default function UploadModal({ onClose, onSuccess }) {
   const fileRef    = useRef()
   const previewUrl = useRef(null)
 
-  // Revoke object URL on unmount to avoid memory leak
   useEffect(() => {
     return () => {
       if (previewUrl.current) URL.revokeObjectURL(previewUrl.current)
@@ -106,7 +105,6 @@ export default function UploadModal({ onClose, onSuccess }) {
               <FaCloudArrowUp aria-hidden="true" />
               <p>Arrastra tu imagen aquí</p>
               <small>PNG, JPG, WEBP — máx. 10 MB</small>
-              {/* Label wraps the hidden input — accessible without extra button */}
               <label className="btn-choose" style={{ marginTop: '.5rem' }}>
                 Elegir archivo
                 <input

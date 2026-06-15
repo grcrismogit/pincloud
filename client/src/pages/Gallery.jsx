@@ -26,7 +26,7 @@ export default function Gallery() {
       if (category !== 'Todos') params.set('category',  category.toLowerCase())
       const data = await apiFetch(`/api/pins?${params}`, {}, token)
       setPins(data.pins || data || [])
-    } catch { /* silent */ }
+    } catch {}
     finally { setLoading(false) }
   }, [search, category, token])
 
