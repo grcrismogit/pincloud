@@ -64,9 +64,12 @@ export default function Home() {
     if (regData.password.length < 8) { setAlert({ type: 'error', msg: 'La contraseña debe tener al menos 8 caracteres.' }); return }
     setLoading(true)
     try {
-      await apiFetch('/api/auth/register', { method: 'POST', body: JSON.stringify(regData) })
+      const data = await apiFetch('/api/auth/register', { method: 'POST', body: JSON.stringify(regData) })
       sessionStorage.setItem('pendingVerifyEmail', regData.email)
-      setAlert({ type: 'success', msg: 'Cuenta creada. Revisa tu email para verificar.' })
+      const msg = data.pendingVerification
+        ? 'Ya tienes una cuenta. Te reenviamos el código de verificación.'
+        : 'Cuenta creada. Revisa tu email para verificar.'
+      setAlert({ type: 'success', msg })
       setTimeout(() => { closeModal(); navigate('/verify-email') }, 2000)
     } catch (err) {
       setAlert({ type: 'error', msg: err.message || 'No se pudo crear la cuenta.' })

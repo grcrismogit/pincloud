@@ -23,6 +23,14 @@ router.post('/register', async (req, res) => {
 
     const exists = await User.findOne({ $or: [{ email }, { username }] });
     if (exists) {
+      if (exists.email === email.toLowerCase() && !exists.isVerified) {
+        const code = generateCode();
+        exists.verifyCode        = code;
+        exists.verifyCodeExpires = new Date(Date.now() + CODE_TTL);
+        await exists.save();
+        try { await sendVerificationEmail(email, code); } catch {}
+        return res.status(200).json({ message: 'Ya tienes una cuenta pendiente de verificación. Te reenviamos el código.', pendingVerification: true });
+      }
       const field = exists.email === email.toLowerCase() ? 'correo' : 'nombre de usuario';
       return res.status(409).json({ message: `Este ${field} ya está registrado.` });
     }

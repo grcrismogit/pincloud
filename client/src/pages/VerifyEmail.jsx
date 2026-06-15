@@ -6,9 +6,11 @@ import { apiFetch } from '../utils/helpers.js'
 
 export default function VerifyEmail() {
   const navigate = useNavigate()
-  const [otp,     setOtp]    = useState(['','','','','',''])
+  const savedEmail = sessionStorage.getItem('pendingVerifyEmail') || ''
+  const [email,   setEmail]   = useState(savedEmail)
+  const [otp,     setOtp]     = useState(['','','','','',''])
   const [loading, setLoading] = useState(false)
-  const [alert,   setAlert]  = useState({ type: '', msg: '' })
+  const [alert,   setAlert]   = useState({ type: '', msg: '' })
   const refs = useRef([])
 
   function handleOtpChange(i, val) {
@@ -26,9 +28,8 @@ export default function VerifyEmail() {
   async function handleVerify(e) {
     e.preventDefault()
     const code = otp.join('')
+    if (!email) { setAlert({ type: 'error', msg: 'Ingresa tu correo electrónico.' }); return }
     if (code.length < 6) { setAlert({ type: 'error', msg: 'Ingresa el código completo.' }); return }
-    const email = sessionStorage.getItem('pendingVerifyEmail')
-    if (!email) { setAlert({ type: 'error', msg: 'Sesión expirada. Vuelve a registrarte.' }); return }
     setLoading(true); setAlert({ type: '', msg: '' })
     try {
       await apiFetch('/api/auth/verify-email', { method: 'POST', body: JSON.stringify({ email, code }) })
@@ -37,6 +38,17 @@ export default function VerifyEmail() {
       setTimeout(() => navigate('/'), 1500)
     } catch (err) {
       setAlert({ type: 'error', msg: err.message || 'Código incorrecto.' })
+    } finally { setLoading(false) }
+  }
+
+  async function handleResend() {
+    if (!email) { setAlert({ type: 'error', msg: 'Ingresa tu correo primero.' }); return }
+    setLoading(true); setAlert({ type: '', msg: '' })
+    try {
+      await apiFetch('/api/auth/resend-verification', { method: 'POST', body: JSON.stringify({ email }) })
+      setAlert({ type: 'success', msg: 'Código reenviado. Revisa tu correo.' })
+    } catch (err) {
+      setAlert({ type: 'error', msg: err.message || 'No se pudo reenviar.' })
     } finally { setLoading(false) }
   }
 
@@ -52,6 +64,20 @@ export default function VerifyEmail() {
         )}
 
         <form onSubmit={handleVerify}>
+          {!savedEmail && (
+            <>
+              <label htmlFor="verify-email-input" className="sr-only">Correo electrónico</label>
+              <input
+                id="verify-email-input"
+                className="modal-input"
+                type="email"
+                placeholder="Tu correo electrónico"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                style={{ marginBottom: '1rem' }}
+              />
+            </>
+          )}
           <div className="otp-row">
             {otp.map((digit, i) => (
               <input
@@ -73,8 +99,13 @@ export default function VerifyEmail() {
           </button>
         </form>
 
-        <p style={{ marginTop: '1.25rem', fontSize: '.88rem', color: 'var(--muted)' }}>
+        <p style={{ marginTop: '1.25rem', fontSize: '.88rem', color: 'var(--muted)', textAlign: 'center' }}>
           ¿No recibiste el código?{' '}
+          <button className="modal-link" onClick={handleResend} type="button" disabled={loading}>
+            Reenviar código
+          </button>
+        </p>
+        <p style={{ marginTop: '.5rem', fontSize: '.88rem', color: 'var(--muted)', textAlign: 'center' }}>
           <button className="modal-link" onClick={() => navigate('/')} type="button">
             Volver al inicio
           </button>
