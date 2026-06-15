@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useLocation } from 'react-router-dom'
 import { FaImages, FaSpinner, FaPlus } from 'react-icons/fa6'
 import Sidebar from '../components/Sidebar.jsx'
 import Topbar from '../components/Topbar.jsx'
@@ -11,10 +12,11 @@ import { apiFetch } from '../utils/helpers.js'
 
 export default function Gallery() {
   const { token } = useAuth()
+  const location = useLocation()
   const [pins,       setPins]       = useState([])
   const [loading,    setLoading]    = useState(true)
   const [search,     setSearch]     = useState('')
-  const [category,   setCategory]   = useState('Todos')
+  const [category,   setCategory]   = useState(location.state?.category || 'Todos')
   const [showUpload, setShowUpload] = useState(false)
   const [detailPin,  setDetailPin]  = useState(null)
 
