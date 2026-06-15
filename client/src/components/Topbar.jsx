@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
-import { FaMagnifyingGlass, FaUser, FaRightFromBracket } from 'react-icons/fa6'
+import { Link } from 'react-router-dom'
+import { FaMagnifyingGlass, FaUser, FaRightFromBracket, FaBookmark } from 'react-icons/fa6'
 import { useAuth } from '../context/AuthContext.jsx'
 import { avatarInitial } from '../utils/helpers.js'
 
@@ -40,15 +41,23 @@ export default function Topbar({ search, onSearch }) {
             aria-expanded={open}
             aria-haspopup="true"
           >
-            {user?.nombre ? avatarInitial(user.nombre) : <FaUser aria-hidden="true" />}
+            {user?.name ? avatarInitial(user.name) : <FaUser aria-hidden="true" />}
           </button>
 
           {open && (
             <div className="dropdown" role="menu" aria-label="Opciones de usuario">
               <div className="dropdown-header">
-                <strong>{user?.nombre || 'Usuario'}</strong>
+                <strong>{user?.name || 'Usuario'}</strong>
                 <small>{user?.email || ''}</small>
               </div>
+              <Link
+                to="/profile"
+                role="menuitem"
+                className="dropdown-item"
+                onClick={() => setOpen(false)}
+              >
+                <FaBookmark aria-hidden="true" /> Mi perfil
+              </Link>
               <button role="menuitem" onClick={logout} className="danger">
                 <FaRightFromBracket aria-hidden="true" /> Cerrar sesión
               </button>

@@ -31,6 +31,7 @@ const BUCKET = process.env.S3_BUCKET_NAME;
 router.get('/', auth, async (req, res) => {
   try {
     const filter = {};
+    if (req.query.saved === 'true') filter._id = { $in: req.user.savedPins || [] };
     if (req.query.category) filter.category = req.query.category;
     if (req.query.q) {
       const re = new RegExp(req.query.q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');

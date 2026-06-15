@@ -7,6 +7,7 @@ import Informacion from './pages/Informacion.jsx'
 import Empresas from './pages/Empresas.jsx'
 import VerifyEmail from './pages/VerifyEmail.jsx'
 import ForgotPassword from './pages/ForgotPassword.jsx'
+import Profile from './pages/Profile.jsx'
 
 function PrivateRoute({ children }) {
   const { isAuth } = useAuth()
@@ -24,6 +25,7 @@ export default function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/gallery"  element={<PrivateRoute><Gallery /></PrivateRoute>} />
         <Route path="/explorar" element={<PrivateRoute><Explorar /></PrivateRoute>} />
+        <Route path="/profile"  element={<PrivateRoute><Profile /></PrivateRoute>} />
         <Route path="*"            element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
