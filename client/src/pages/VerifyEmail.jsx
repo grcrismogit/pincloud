@@ -27,9 +27,12 @@ export default function VerifyEmail() {
     e.preventDefault()
     const code = otp.join('')
     if (code.length < 6) { setAlert({ type: 'error', msg: 'Ingresa el código completo.' }); return }
+    const email = sessionStorage.getItem('pendingVerifyEmail')
+    if (!email) { setAlert({ type: 'error', msg: 'Sesión expirada. Vuelve a registrarte.' }); return }
     setLoading(true); setAlert({ type: '', msg: '' })
     try {
-      await apiFetch('/api/auth/verify-email', { method: 'POST', body: JSON.stringify({ code }) })
+      await apiFetch('/api/auth/verify-email', { method: 'POST', body: JSON.stringify({ email, code }) })
+      sessionStorage.removeItem('pendingVerifyEmail')
       setAlert({ type: 'success', msg: '¡Email verificado! Redirigiendo…' })
       setTimeout(() => navigate('/'), 1500)
     } catch (err) {

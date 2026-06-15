@@ -65,6 +65,7 @@ export default function Home() {
     setLoading(true)
     try {
       await apiFetch('/api/auth/register', { method: 'POST', body: JSON.stringify(regData) })
+      sessionStorage.setItem('pendingVerifyEmail', regData.email)
       setAlert({ type: 'success', msg: 'Cuenta creada. Revisa tu email para verificar.' })
       setTimeout(() => { closeModal(); navigate('/verify-email') }, 2000)
     } catch (err) {
