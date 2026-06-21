@@ -55,8 +55,8 @@ export default function Informacion() {
         </div>
       </section>
 
-      <section className="info-section" id="como-funciona" style={{ background: '#fafafa', maxWidth: '100%', padding: '5rem 2rem' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+      <section className="info-section info-section--alt" id="como-funciona">
+        <div className="info-section-inner">
           <h2 className="info-section-title">¿Cómo funciona?</h2>
           <p className="info-section-sub">En cuatro pasos sencillos puedes empezar a usar PinCloud.</p>
           <div className="info-steps">

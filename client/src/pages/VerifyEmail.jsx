@@ -60,7 +60,7 @@ export default function VerifyEmail() {
         <p>Ingresa el código de 6 dígitos que enviamos a tu correo electrónico.</p>
 
         {alert.msg && (
-          <div className={`modal-alert ${alert.type}`} role="alert" style={{ marginBottom: '1rem' }}>{alert.msg}</div>
+          <div className={`modal-alert ${alert.type} alert-mb`} role="alert">{alert.msg}</div>
         )}
 
         <form onSubmit={handleVerify}>
@@ -74,7 +74,7 @@ export default function VerifyEmail() {
                 placeholder="Tu correo electrónico"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                style={{ marginBottom: '1rem' }}
+                className="modal-input input-mb"
               />
             </>
           )}
@@ -99,13 +99,13 @@ export default function VerifyEmail() {
           </button>
         </form>
 
-        <p style={{ marginTop: '1.25rem', fontSize: '.88rem', color: 'var(--muted)', textAlign: 'center' }}>
+        <p className="auth-footer-link">
           ¿No recibiste el código?{' '}
           <button className="modal-link" onClick={handleResend} type="button" disabled={loading}>
             Reenviar código
           </button>
         </p>
-        <p style={{ marginTop: '.5rem', fontSize: '.88rem', color: 'var(--muted)', textAlign: 'center' }}>
+        <p className="auth-footer-link">
           <button className="modal-link" onClick={() => navigate('/')} type="button">
             Volver al inicio
           </button>

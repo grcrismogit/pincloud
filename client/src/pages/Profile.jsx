@@ -75,11 +75,10 @@ export default function Profile() {
           </div>
         ) : (
           <div className="masonry-grid">
-            {filtered.map((pin, i) => (
+            {filtered.map(pin => (
               <PinCard
                 key={pin._id}
                 pin={pin}
-                index={i}
                 onOpen={setDetailPin}
                 onDelete={handleDelete}
               />

@@ -136,8 +136,52 @@ export default function Home() {
         <button className="btn-white" onClick={() => setModal('register')}>Crear cuenta gratis</button>
       </section>
 
+      <section className="home-terms" id="politicas">
+        <div className="home-terms-inner">
+          <h2 className="home-section-title home-terms-title">Términos y políticas de uso</h2>
+          <div className="home-terms-grid">
+            <div className="home-terms-card">
+              <div className="home-terms-icon">📋</div>
+              <h3>Al crear tu cuenta aceptas</h3>
+              <ul>
+                <li>Proporcionar información veraz en tu registro.</li>
+                <li>Mantener la confidencialidad de tu contraseña.</li>
+                <li>No crear cuentas falsas o duplicadas.</li>
+                <li>Ser mayor de 13 años para usar la plataforma.</li>
+                <li>Verificar tu correo electrónico antes de acceder.</li>
+              </ul>
+            </div>
+            <div className="home-terms-card">
+              <div className="home-terms-icon">🖼️</div>
+              <h3>Reglas de contenido e imágenes</h3>
+              <ul>
+                <li>Solo se permiten imágenes de tu propiedad o con licencia libre.</li>
+                <li>Está prohibido el contenido explícito, violento o de odio.</li>
+                <li>Las imágenes son analizadas automáticamente por IA antes de publicarse.</li>
+                <li>El contenido inapropiado es rechazado y eliminado de inmediato.</li>
+                <li>No se permite spam, publicidad no autorizada ni contenido engañoso.</li>
+              </ul>
+            </div>
+            <div className="home-terms-card">
+              <div className="home-terms-icon">🔒</div>
+              <h3>Privacidad y datos</h3>
+              <ul>
+                <li>Tu contraseña se almacena cifrada y nunca en texto plano.</li>
+                <li>Las imágenes se guardan en Amazon S3 con acceso controlado.</li>
+                <li>No compartimos tu información personal con terceros.</li>
+                <li>Puedes eliminar tu contenido en cualquier momento.</li>
+                <li>Usamos cookies esenciales solo para mantener tu sesión activa.</li>
+              </ul>
+            </div>
+          </div>
+          <p className="home-terms-note">
+            Al registrarte confirmas haber leído y aceptado estas políticas. PinCloud se reserva el derecho de suspender cuentas que incumplan estas normas.
+          </p>
+        </div>
+      </section>
+
       <footer className="pub-footer">
-        <p>© 2026 PinCloud · <a href="/informacion">Información</a></p>
+        <p>© 2026 PinCloud · <a href="/informacion">Información</a> · <a href="#politicas">Políticas</a></p>
       </footer>
 
       {modal && (

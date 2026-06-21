@@ -83,7 +83,7 @@ export default function UploadModal({ onClose, onSuccess }) {
     <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
       <div className="modal" role="dialog" aria-modal="true" aria-labelledby="upload-title">
         <div className="modal-hd">
-          <h2 id="upload-title" style={{ fontSize: '1.05rem', fontWeight: 800 }}>Subir pin</h2>
+          <h2 id="upload-title" className="modal-hd-title">Subir pin</h2>
           <button className="modal-close" onClick={onClose} aria-label="Cerrar">
             <FaXmark aria-hidden="true" />
           </button>
@@ -105,7 +105,7 @@ export default function UploadModal({ onClose, onSuccess }) {
               <FaCloudArrowUp aria-hidden="true" />
               <p>Arrastra tu imagen aquí</p>
               <small>PNG, JPG, WEBP — máx. 10 MB</small>
-              <label className="btn-choose" style={{ marginTop: '.5rem' }}>
+              <label className="btn-choose btn-choose-wrap">
                 Elegir archivo
                 <input
                   ref={fileRef}
@@ -184,7 +184,7 @@ export default function UploadModal({ onClose, onSuccess }) {
           </button>
           <button className="btn-red" onClick={handleSubmit} disabled={busy}>
             {status === 'uploading'
-              ? <><FaSpinner aria-hidden="true" style={{ animation: 'spin .9s linear infinite' }} /> Subiendo…</>
+              ? <><FaSpinner aria-hidden="true" className="spin" /> Subiendo…</>
               : 'Publicar'}
           </button>
         </div>

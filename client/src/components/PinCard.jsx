@@ -3,7 +3,7 @@ import { FaHeart, FaRegHeart, FaExpand, FaTrash } from 'react-icons/fa6'
 import { useAuth } from '../context/AuthContext.jsx'
 import { apiFetch, avatarInitial, normalizePin } from '../utils/helpers.js'
 
-export default function PinCard({ pin: rawPin, index = 0, onOpen, onDelete }) {
+export default function PinCard({ pin: rawPin, onOpen, onDelete }) {
   const { token, user } = useAuth()
   const pin = normalizePin(rawPin)
 
@@ -57,7 +57,6 @@ export default function PinCard({ pin: rawPin, index = 0, onOpen, onDelete }) {
   return (
     <div
       className="pin-card"
-      style={{ '--pin-index': Math.min(index, 20) }}
       onClick={() => onOpen(rawPin)}
     >
       <div className="pin-img-wrap">

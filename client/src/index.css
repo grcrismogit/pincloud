@@ -156,9 +156,28 @@ button { font-family: inherit; }
   break-inside: avoid; margin-bottom: 0.75rem; border-radius: var(--radius);
   overflow: hidden; cursor: pointer; position: relative; display: inline-block; width: 100%;
   animation: pinFadeIn 0.35s var(--ease) both;
-  animation-delay: calc(var(--pin-index,0) * 40ms);
   transition: transform var(--t), box-shadow var(--t);
 }
+.masonry-grid .pin-card:nth-child(1)  { animation-delay:   0ms; }
+.masonry-grid .pin-card:nth-child(2)  { animation-delay:  40ms; }
+.masonry-grid .pin-card:nth-child(3)  { animation-delay:  80ms; }
+.masonry-grid .pin-card:nth-child(4)  { animation-delay: 120ms; }
+.masonry-grid .pin-card:nth-child(5)  { animation-delay: 160ms; }
+.masonry-grid .pin-card:nth-child(6)  { animation-delay: 200ms; }
+.masonry-grid .pin-card:nth-child(7)  { animation-delay: 240ms; }
+.masonry-grid .pin-card:nth-child(8)  { animation-delay: 280ms; }
+.masonry-grid .pin-card:nth-child(9)  { animation-delay: 320ms; }
+.masonry-grid .pin-card:nth-child(10) { animation-delay: 360ms; }
+.masonry-grid .pin-card:nth-child(11) { animation-delay: 400ms; }
+.masonry-grid .pin-card:nth-child(12) { animation-delay: 440ms; }
+.masonry-grid .pin-card:nth-child(13) { animation-delay: 480ms; }
+.masonry-grid .pin-card:nth-child(14) { animation-delay: 520ms; }
+.masonry-grid .pin-card:nth-child(15) { animation-delay: 560ms; }
+.masonry-grid .pin-card:nth-child(16) { animation-delay: 600ms; }
+.masonry-grid .pin-card:nth-child(17) { animation-delay: 640ms; }
+.masonry-grid .pin-card:nth-child(18) { animation-delay: 680ms; }
+.masonry-grid .pin-card:nth-child(19) { animation-delay: 720ms; }
+.masonry-grid .pin-card:nth-child(20) { animation-delay: 760ms; }
 .pin-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
 .pin-card:active { transform: translateY(-1px); }
 .pin-img-wrap { position: relative; overflow: hidden; border-radius: var(--radius); }
@@ -465,6 +484,19 @@ button { font-family: inherit; }
 .btn-white:hover  { opacity: 0.9; transform: scale(1.02); }
 .btn-white:active { transform: scale(0.96); }
 
+/* HOME TERMS */
+.home-terms { padding: 5rem 2rem; background: #f9f9f9; }
+.home-terms-inner { max-width: 1100px; margin: 0 auto; }
+.home-terms-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+.home-terms-card { background: #fff; border-radius: 20px; padding: 2rem; box-shadow: var(--shadow); }
+.home-terms-card:hover { box-shadow: var(--shadow-md); }
+.home-terms-icon { font-size: 2rem; margin-bottom: 1rem; }
+.home-terms-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; color: var(--text); }
+.home-terms-card ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+.home-terms-card ul li { font-size: 0.88rem; color: var(--muted); line-height: 1.5; padding-left: 1.1rem; position: relative; }
+.home-terms-card ul li::before { content: '·'; position: absolute; left: 0; color: var(--red); font-weight: 900; }
+.home-terms-note { text-align: center; font-size: 0.83rem; color: var(--muted); max-width: 680px; margin: 0 auto; line-height: 1.6; }
+
 /* ══ INFORMACION ══ */
 .info-page { padding-top: 60px; }
 .info-hero { padding: 100px 2rem 80px; text-align: center; background: linear-gradient(135deg,#fff5f5 0%,#fff 50%,#f0f7ff 100%); }
@@ -637,6 +669,29 @@ button { font-family: inherit; }
 .pub-footer { background: #111; color: #aaa; padding: 2rem; text-align: center; font-size: .85rem; }
 .pub-footer a { color: #aaa; text-decoration: none; }
 .pub-footer a:hover { color: #fff; }
+
+/* ══ AUTH STEPS (ForgotPassword / VerifyEmail) ══ */
+.auth-step-title { font-size: 1.4rem; font-weight: 800; margin-bottom: .5rem; }
+.auth-step-desc  { margin-bottom: 1.25rem; color: var(--muted); font-size: .9rem; line-height: 1.5; }
+.auth-footer-link { margin-top: 1.25rem; font-size: .88rem; color: var(--muted); text-align: center; }
+.alert-mb { margin-bottom: 1rem; }
+.input-mb { margin-bottom: 1rem; }
+.btn-mt { margin-top: 1rem; }
+
+/* ══ MODAL HEADER TITLE ══ */
+.modal-hd-title { font-size: 1.05rem; font-weight: 800; }
+.btn-choose-wrap { margin-top: .5rem; }
+
+/* ══ COMMENTS ══ */
+.comments-title { font-size: 0.95rem; font-weight: 700; margin-bottom: .5rem; }
+.comment-error  { color: var(--red-dark); font-size: .8rem; margin-top: .4rem; }
+
+/* ══ INFORMACION ALT SECTION ══ */
+.info-section--alt { background: #fafafa; padding: 5rem 2rem; }
+.info-section-inner { max-width: 1100px; margin: 0 auto; }
+
+/* ══ HOME TERMS TITLE ══ */
+.home-terms-title { font-size: 1.4rem; margin-bottom: 2rem; }
 
 /* ══ SPINNER ANIMATION ══ */
 @keyframes spin { to { transform: rotate(360deg); } }

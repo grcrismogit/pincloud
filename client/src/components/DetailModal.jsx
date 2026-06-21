@@ -122,7 +122,7 @@ export default function DetailModal({ pin: rawPin, onClose }) {
             )}
 
             <section className="comments-section" aria-label="Comentarios">
-              <h3 className="comments-section h4" style={{ fontSize: '0.95rem', fontWeight: 700 }}>
+              <h3 className="comments-title">
                 Comentarios ({comments.length})
               </h3>
 
@@ -151,9 +151,7 @@ export default function DetailModal({ pin: rawPin, onClose }) {
               )}
 
               {commentErr && (
-                <p role="alert" style={{ color: 'var(--red-dark)', fontSize: '.8rem', marginTop: '.4rem' }}>
-                  {commentErr}
-                </p>
+                <p role="alert" className="comment-error">{commentErr}</p>
               )}
 
               <div className="comment-input-row">
@@ -176,7 +174,7 @@ export default function DetailModal({ pin: rawPin, onClose }) {
                   disabled={sending || !commentText.trim()}
                 >
                   {sending
-                    ? <FaSpinner aria-hidden="true" style={{ animation: 'spin .9s linear infinite' }} />
+                    ? <FaSpinner aria-hidden="true" className="spin" />
                     : <FaPaperPlane aria-hidden="true" />}
                 </button>
               </div>

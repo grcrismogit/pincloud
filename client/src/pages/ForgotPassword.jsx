@@ -69,12 +69,12 @@ export default function ForgotPassword() {
       <div className="auth-card">
         <div className="auth-logo"><Logo size={22} /></div>
 
-        {alert.msg && <div className={`modal-alert ${alert.type}`} role="alert" style={{ marginBottom: '1rem' }}>{alert.msg}</div>}
+        {alert.msg && <div className={`modal-alert ${alert.type} alert-mb`} role="alert">{alert.msg}</div>}
 
         {step === 'request' && (
           <>
-            <h1 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '.5rem' }}>Recuperar contraseña</h1>
-            <p style={{ marginBottom: '1.25rem', color: 'var(--muted)', fontSize: '.9rem' }}>
+            <h1 className="auth-step-title">Recuperar contraseña</h1>
+            <p className="auth-step-desc">
               Te enviaremos un código de 6 dígitos a tu correo.
             </p>
             <form onSubmit={handleRequest}>
@@ -90,13 +90,13 @@ export default function ForgotPassword() {
 
         {step === 'verify' && (
           <>
-            <h1 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '.5rem' }}>Ingresa el código</h1>
-            <p style={{ marginBottom: '1.25rem', color: 'var(--muted)', fontSize: '.9rem' }}>
+            <h1 className="auth-step-title">Ingresa el código</h1>
+            <p className="auth-step-desc">
               Enviamos un código a <strong>{email}</strong>
             </p>
             <form onSubmit={handleVerifyCode}>
               <OtpInput otp={otp} onChange={handleOtpChange} />
-              <button className="btn-modal-primary" type="submit" disabled={loading} style={{ marginTop: '1rem' }}>
+              <button className="btn-modal-primary btn-mt" type="submit" disabled={loading}>
                 {loading ? <><FaSpinner aria-hidden="true" /> Verificando…</> : 'Verificar código'}
               </button>
             </form>
@@ -105,8 +105,8 @@ export default function ForgotPassword() {
 
         {step === 'reset' && (
           <>
-            <h1 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '.5rem' }}>Nueva contraseña</h1>
-            <p style={{ marginBottom: '1.25rem', color: 'var(--muted)', fontSize: '.9rem' }}>
+            <h1 className="auth-step-title">Nueva contraseña</h1>
+            <p className="auth-step-desc">
               Ingresa y confirma tu nueva contraseña.
             </p>
             <form onSubmit={handleReset}>
@@ -123,7 +123,7 @@ export default function ForgotPassword() {
           </>
         )}
 
-        <p style={{ marginTop: '1.25rem', fontSize: '.88rem', color: 'var(--muted)', textAlign: 'center' }}>
+        <p className="auth-footer-link">
           <button className="modal-link" onClick={() => navigate('/')} type="button">
             ← Volver al inicio
           </button>

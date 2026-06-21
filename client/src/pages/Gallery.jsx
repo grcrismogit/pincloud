@@ -66,11 +66,10 @@ export default function Gallery() {
           </div>
         ) : (
           <div className="masonry-grid">
-            {pins.map((pin, i) => (
+            {pins.map(pin => (
               <PinCard
                 key={pin._id}
                 pin={pin}
-                index={i}
                 onOpen={setDetailPin}
                 onDelete={handleDelete}
               />
