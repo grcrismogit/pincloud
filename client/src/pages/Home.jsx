@@ -95,6 +95,7 @@ export default function Home() {
         onRegister={() => setModal('register')}
       />
 
+      <main className="home-main">
       <section className="hero-section">
         <div className="hero-left">
           <h1>Tu tablero de inspiración en la nube</h1>
@@ -107,7 +108,7 @@ export default function Home() {
           <div className="collage" aria-hidden="true">
             {COLLAGE_IMGS.map((src, i) => (
               <div key={i} className={`collage-img ci-${i+1}`}>
-                <img src={src} alt="" loading="lazy" />
+                <img src={src} alt="" loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : 'auto'} />
               </div>
             ))}
           </div>
@@ -179,6 +180,8 @@ export default function Home() {
           </p>
         </div>
       </section>
+
+      </main>
 
       <footer className="pub-footer">
         <p>© 2026 PinCloud · <a href="/informacion">Información</a> · <a href="#politicas">Políticas</a></p>

@@ -25,6 +25,7 @@ export default function Informacion() {
     <div className="info-page">
       <PublicNavbar />
 
+      <main>
       <section className="info-hero">
         <h1>La plataforma visual para <span>guardar tus ideas</span></h1>
         <p>PinCloud es una aplicación web donde puedes subir, organizar y descubrir imágenes con una experiencia moderna y segura.</p>
@@ -96,6 +97,8 @@ export default function Informacion() {
           Crear cuenta gratis
         </button>
       </section>
+
+      </main>
 
       <footer className="pub-footer">
         <p>© 2026 PinCloud · <a href="/#politicas">Políticas</a></p>
