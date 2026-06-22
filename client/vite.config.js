@@ -10,5 +10,16 @@ export default defineConfig({
       '/api': 'http://localhost:3000',
     },
   },
-  build: { outDir: 'dist' },
+  build: {
+    outDir: 'dist',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor:  ['react', 'react-dom'],
+          router:  ['react-router-dom'],
+          icons:   ['react-icons'],
+        },
+      },
+    },
+  },
 })

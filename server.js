@@ -42,9 +42,10 @@ app.post('/api/contact', async (req, res) => {
 });
 
 const clientDist = path.join(__dirname, 'client', 'dist');
-app.use(express.static(clientDist));
+app.use(express.static(clientDist, { maxAge: '1y', etag: true, index: false }));
 app.get('*', (req, res) => {
   if (req.path.startsWith('/api/')) return res.status(404).json({ message: 'Not found' });
+  res.set('Cache-Control', 'no-cache');
   res.sendFile(path.join(clientDist, 'index.html'));
 });
 

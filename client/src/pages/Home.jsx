@@ -7,11 +7,11 @@ import { useAuth } from '../context/AuthContext.jsx'
 import { apiFetch } from '../utils/helpers.js'
 
 const COLLAGE_IMGS = [
-  'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=400&auto=format',
-  'https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=400&auto=format',
-  'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&auto=format',
-  'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&auto=format',
-  'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&auto=format',
+  'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=400&auto=format&fm=webp&q=75',
+  'https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=400&auto=format&fm=webp&q=75',
+  'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&auto=format&fm=webp&q=75',
+  'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&auto=format&fm=webp&q=75',
+  'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&auto=format&fm=webp&q=75',
 ]
 
 const FEATURES = [

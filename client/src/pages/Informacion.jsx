@@ -98,7 +98,7 @@ export default function Informacion() {
       </section>
 
       <footer className="pub-footer">
-        <p>© 2026 PinCloud · <a href="/empresas">Empresas</a></p>
+        <p>© 2026 PinCloud · <a href="/#politicas">Políticas</a></p>
       </footer>
     </div>
   )
